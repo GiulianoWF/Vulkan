@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/media/giuliano/Data/my_programs/C++/vulkan/build",
+  "command": "/usr/bin/g++ -DHAS_FCHOWN -DHAS_STICKY_DIR_BIT -D_BSD_SOURCE -D_DEFAULT_SOURCE -D_WIN32_WINNT=0x0601 -isystem /home/giuliano/.conan/data/glew/2.2.0/_/_/package/44741af961cbe3bae7bd261b66459e5b6dc65693/include -isystem /home/giuliano/.conan/data/glfw/3.3.7/_/_/package/08f4c711a76082a8ca8e8d4783b15f190b7d8e79/include -isystem /usr/include/uuid -isystem /home/giuliano/.conan/data/vulkan-headers/1.3.211.0/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include -isystem /home/giuliano/.conan/data/vulkan-headers/1.3.211.0/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/res/vulkan/registry -g -o source/CMakeFiles/vulkanApp.dir/main.cc.o -c /media/giuliano/Data/my_programs/C++/vulkan/source/main.cc",
+  "file": "/media/giuliano/Data/my_programs/C++/vulkan/source/main.cc"
+}
+]
