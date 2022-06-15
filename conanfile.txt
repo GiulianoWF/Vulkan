@@ -19,10 +19,13 @@ cmake_find_package
 # sudo cp /lib/x86_64-linux-gnu/pkgconfig/gl.pc /lib/x86_64-linux-gnu/pkgconfig/opengl.pc 
 # sudo apt install libvulkan-dev
 
+# selet all:
+# gg    -> go to begining of file
+# V     -> start to select
+# G     -> go to end of file 
 
-
-
-
+# paste:
+# "+p
 
 
 
