@@ -5,6 +5,7 @@
 /home/giuliano/.conan/data/openssl/3.0.2/_/_/package/d868f217f3aaae7df1d16b47c8a7d0f9f8dbc35b/include
 /home/giuliano/.conan/data/vulkan-headers/1.3.211.0/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include
 /home/giuliano/.conan/data/vulkan-headers/1.3.211.0/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/res/vulkan/registry
+/home/giuliano/.conan/data/glm/0.9.9.8/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include
 /usr/include/uuid
 /home/giuliano/.conan/data/zlib/1.2.12/_/_/package/be27726f9885116da1158027505be62e913cd585/include
 
@@ -29,6 +30,7 @@
 /home/giuliano/.conan/data/openssl/3.0.2/_/_/package/d868f217f3aaae7df1d16b47c8a7d0f9f8dbc35b/
 /home/giuliano/.conan/data/openssl/3.0.2/_/_/package/d868f217f3aaae7df1d16b47c8a7d0f9f8dbc35b/lib/cmake
 /home/giuliano/.conan/data/vulkan-headers/1.3.211.0/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/
+/home/giuliano/.conan/data/glm/0.9.9.8/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/
 /home/giuliano/.conan/data/glu/system/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/
 /home/giuliano/.conan/data/xorg/system/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/
 /home/giuliano/.conan/data/zlib/1.2.12/_/_/package/be27726f9885116da1158027505be62e913cd585/
@@ -464,6 +466,70 @@ cmake_find_package=VulkanHeaders
 cmake_find_package_multi=VulkanHeaders
 
 
+[includedirs_glm]
+/home/giuliano/.conan/data/glm/0.9.9.8/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include
+
+[libdirs_glm]
+
+
+[bindirs_glm]
+
+
+[resdirs_glm]
+
+
+[builddirs_glm]
+/home/giuliano/.conan/data/glm/0.9.9.8/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/
+
+[libs_glm]
+
+
+[system_libs_glm]
+
+
+[defines_glm]
+
+
+[cppflags_glm]
+
+
+[cxxflags_glm]
+
+
+[cflags_glm]
+
+
+[sharedlinkflags_glm]
+
+
+[exelinkflags_glm]
+
+
+[sysroot_glm]
+
+
+[frameworks_glm]
+
+
+[frameworkdirs_glm]
+
+
+[rootpath_glm]
+/home/giuliano/.conan/data/glm/0.9.9.8/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9
+
+[name_glm]
+glm
+
+[version_glm]
+0.9.9.8
+
+[generatornames_glm]
+
+
+[generatorfilenames_glm]
+
+
+
 [includedirs_glu]
 
 
@@ -770,6 +836,7 @@ cmake_find_package_multi=opengl_system
 
 [USER_glew]
 [USER_glfw]
+[USER_glm]
 [USER_glu]
 [USER_opengl]
 [USER_openssl]
@@ -783,6 +850,7 @@ cmake_find_package_multi=opengl_system
 PATH=["/home/giuliano/.conan/data/sqlite3/3.32.3/_/_/package/69ef158e99e121753deefb573cb3bcdf861ce7a5/bin"]
 [ENV_openssl]
 [ENV_vulkan-headers]
+[ENV_glm]
 [ENV_glu]
 [ENV_xorg]
 [ENV_zlib]
