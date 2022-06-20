@@ -1,3 +1,8 @@
+#define VOLK_IMPLEMENTATION
+#define VK_NO_PROTOTYPES
+#include "volk.h"
+#include "vulkan/vulkan.h"
+
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
@@ -43,7 +48,8 @@ const std::vector<const char*> validationLayers = {
 };
 
 const std::vector<const char*> deviceExtensions = {
-    VK_KHR_SWAPCHAIN_EXTENSION_NAME
+    VK_KHR_SWAPCHAIN_EXTENSION_NAME,
+    VK_EXT_EXTERNAL_MEMORY_HOST_EXTENSION_NAME
 };
 
 #ifdef NDEBUG
@@ -136,6 +142,8 @@ struct UniformBufferObject {
     alignas(16) glm::mat4 view;
     alignas(16) glm::mat4 proj;
 };
+
+#include "externalBufferHelper.h"
 
 class HelloTriangleApplication {
 public:
@@ -342,6 +350,8 @@ private:
     }
 
     void createInstance() {
+        volkInitialize();
+
         if (enableValidationLayers && !checkValidationLayerSupport()) {
             throw std::runtime_error("validation layers requested, but not available!");
         }
@@ -352,7 +362,7 @@ private:
         appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
         appInfo.pEngineName = "No Engine";
         appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
-        appInfo.apiVersion = VK_API_VERSION_1_0;
+        appInfo.apiVersion = VK_API_VERSION_1_1;
 
         VkInstanceCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
@@ -378,6 +388,8 @@ private:
         if (vkCreateInstance(&createInfo, nullptr, &instance) != VK_SUCCESS) {
             throw std::runtime_error("failed to create instance!");
         }
+
+        volkLoadInstance(instance);
     }
 
     void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo) {
@@ -1037,23 +1049,56 @@ private:
     }
 
     void createVertexBuffer() {
-        VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
+        VkDeviceSize dataSize = sizeof(vertices[0]) * vertices.size();
 
+        VkDeviceSize bufferSize = dataSize;
+        if (bufferSize % 4096 != 0)
+        {
+            bufferSize += 4096 - (bufferSize % 4096);
+        }
+
+        //====================================================================
+        //                     Staging vertex buffer
+        //====================================================================
+        bool allocatedMemory = true;
         VkBuffer stagingBuffer;
         VkDeviceMemory stagingBufferMemory;
-        createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
-
         void* data;
-        vkMapMemory(device, stagingBufferMemory, 0, bufferSize, 0, &data);
-            memcpy(data, vertices.data(), (size_t) bufferSize);
-        vkUnmapMemory(device, stagingBufferMemory);
+        if(!allocatedMemory)
+        {
+            createBuffer(dataSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
 
-        createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vertexBuffer, vertexBufferMemory);
+            vkMapMemory(device, stagingBufferMemory, 0, dataSize, 0, &data);
+                memcpy(data, vertices.data(), (size_t) dataSize);
+            vkUnmapMemory(device, stagingBufferMemory);
+        }
+        else
+        {
+            data = malloc(bufferSize);
+            
+            createAllocatedBuffer(physicalDevice, device, data, stagingBuffer, stagingBufferMemory, bufferSize);
+            memcpy(data, vertices.data(), (size_t) dataSize);
+        }
 
-        copyBuffer(stagingBuffer, vertexBuffer, bufferSize);
+        //====================================================================
+        //                          Vertex buffer
+        //====================================================================
+        createBuffer(dataSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vertexBuffer, vertexBufferMemory);
 
-        vkDestroyBuffer(device, stagingBuffer, nullptr);
-        vkFreeMemory(device, stagingBufferMemory, nullptr);
+        copyBuffer(stagingBuffer, vertexBuffer, dataSize);
+
+        //====================================================================
+        //                Destruct staging vertex buffer
+        //====================================================================
+        if(!allocatedMemory)
+        {
+            vkDestroyBuffer(device, stagingBuffer, nullptr);
+            vkFreeMemory(device, stagingBufferMemory, nullptr);
+        }
+        else
+        {
+            free(data);
+        }
     }
 
     void createIndexBuffer() {
