@@ -47,9 +47,15 @@ const std::vector<const char*> validationLayers = {
     "VK_LAYER_KHRONOS_validation"
 };
 
+const std::vector<const char*> instanceExtensions = {
+    VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME,
+    VK_KHR_EXTERNAL_MEMORY_CAPABILITIES_EXTENSION_NAME,
+};
+
 const std::vector<const char*> deviceExtensions = {
     VK_KHR_SWAPCHAIN_EXTENSION_NAME,
-    VK_EXT_EXTERNAL_MEMORY_HOST_EXTENSION_NAME
+    VK_KHR_EXTERNAL_MEMORY_EXTENSION_NAME,
+    VK_EXT_EXTERNAL_MEMORY_HOST_EXTENSION_NAME,
 };
 
 #ifdef NDEBUG
@@ -1063,7 +1069,7 @@ private:
         bool allocatedMemory = true;
         VkBuffer stagingBuffer;
         VkDeviceMemory stagingBufferMemory;
-        void* data;
+        void * data;
         if(!allocatedMemory)
         {
             createBuffer(dataSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
@@ -1589,6 +1595,17 @@ private:
 
         if (enableValidationLayers) {
             extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+        }
+
+        for(auto const& entry : instanceExtensions)
+        {
+            extensions.push_back(entry);
+        }
+
+        std::cout << "Instance extensions: " << std::endl;
+        for (auto const& entry : extensions)
+        {
+            std::cout << entry << std::endl;
         }
 
         return extensions;
