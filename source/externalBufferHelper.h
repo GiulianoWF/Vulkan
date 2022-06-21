@@ -40,6 +40,19 @@ void printError(VkResult result)
     }
 }
 
+uint32_t findMemoryType(VkPhysicalDevice physicalDevice, uint32_t typeFilter, VkMemoryPropertyFlags properties) {
+    VkPhysicalDeviceMemoryProperties memProperties;
+    vkGetPhysicalDeviceMemoryProperties(physicalDevice, &memProperties);
+
+    for (uint32_t i = 0; i < memProperties.memoryTypeCount; i++) {
+        if ((typeFilter & (1 << i)) && (memProperties.memoryTypes[i].propertyFlags & properties) == properties) {
+            return i;
+        }
+    }
+
+    throw std::runtime_error("failed to find suitable memory type!");
+}
+
 void createAllocatedBuffer(VkPhysicalDevice physicalDevice, 
                            VkDevice const& device,
                            void* data,
@@ -47,6 +60,28 @@ void createAllocatedBuffer(VkPhysicalDevice physicalDevice,
                            VkDeviceMemory& bufferMemory,
                            VkDeviceSize size)
 {
+    // uint32_t extNum;
+    // vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extNum, nullptr);
+    // VkExtensionProperties deviceProps[extNum];
+    // vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extNum, deviceProps);
+
+    // std::cout << "Extensions " << extNum << std::endl;
+    // for (int i =0 ; i < extNum ; ++i)
+    // {
+    //     // std::cout << deviceProps[i].extensionName << std::endl;
+    // }
+
+    // uint32_t extNum;
+    // vkEnumerateInstanceExtensionProperties(nullptr, &extNum, nullptr);
+    // VkExtensionProperties instanceProps[extNum];
+    // vkEnumerateInstanceExtensionProperties(nullptr, &extNum, instanceProps);
+
+    // std::cout << "Extensions " << extNum << std::endl;
+    // for (int i =0 ; i < extNum ; ++i)
+    // {
+    //     std::cout << instanceProps[i].extensionName << std::endl;
+    // }
+
     VkExternalMemoryHandleTypeFlagBits externalMemoryFlagBits {
         VK_EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT
     };
@@ -85,6 +120,21 @@ void createAllocatedBuffer(VkPhysicalDevice physicalDevice,
         throw std::runtime_error("failed to create buffer!");
     }
 
+    VkMemoryHostPointerPropertiesEXT memoryHostPointerProperties {
+        .sType = VK_STRUCTURE_TYPE_MEMORY_HOST_POINTER_PROPERTIES_EXT,
+    };
+
+    if (auto result = vkGetMemoryHostPointerPropertiesEXT(device, externalMemoryFlagBits, data, &memoryHostPointerProperties); 
+        result != VK_SUCCESS) 
+    {
+        printError(result);
+    }
+    std::cout << "VkMemoryHostPointerPropertiesEXT::memoryTypeBits " << memoryHostPointerProperties.memoryTypeBits << std::endl;
+
+    VkMemoryPropertyFlags memProperties {
+        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
+    };
+
     VkImportMemoryHostPointerInfoEXT importHostPointerInfo {
         .sType = VK_STRUCTURE_TYPE_IMPORT_MEMORY_HOST_POINTER_INFO_EXT,
         .pNext = nullptr,
@@ -92,22 +142,16 @@ void createAllocatedBuffer(VkPhysicalDevice physicalDevice,
         .pHostPointer = data,
     };
 
+    VkMemoryRequirements memRequirements;
+    vkGetBufferMemoryRequirements(device, buffer, &memRequirements);
+    auto memTypeIndex = findMemoryType(physicalDevice, memRequirements.memoryTypeBits, memProperties);
+    
     VkMemoryAllocateInfo allocInfo {
         .sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
         .pNext = &importHostPointerInfo,
         .allocationSize = size,
-        .memoryTypeIndex = 0,
+        .memoryTypeIndex = memTypeIndex,
     };
-
-    VkMemoryHostPointerPropertiesEXT memoryHostPointerProperties {
-        .sType = VK_STRUCTURE_TYPE_MEMORY_HOST_POINTER_PROPERTIES_EXT,
-    };
-    if (auto result = vkGetMemoryHostPointerPropertiesEXT(device, externalMemoryFlagBits, data, &memoryHostPointerProperties); 
-        result != VK_SUCCESS) 
-    {
-        printError(result);
-    }
-    std::cout << "VkMemoryHostPointerPropertiesEXT::memoryTypeBits " << memoryHostPointerProperties.memoryTypeBits << std::endl;
 
     VkDeviceMemory pMemory;
     if (auto result = vkAllocateMemory(device, &allocInfo, nullptr, &bufferMemory); 
