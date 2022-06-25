@@ -16,5 +16,5 @@ find_package(volk)
 
 target_link_libraries(vulkanApp GLEW::GLEW glfw Vulkan::Vulkan vulkan glm::glm stb::stb tinyobjloader Boost::boost)
 
-add_executable(vertexProcessing minimalVulkan.cc)
+add_executable(vertexProcessing vertex_processing.cc)
 target_link_libraries(vertexProcessing Boost::boost GLEW::GLEW glfw Vulkan::Vulkan vulkan glm::glm)

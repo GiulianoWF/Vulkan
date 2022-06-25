@@ -22,6 +22,7 @@ cmake_find_package
 # sudo cp /lib/x86_64-linux-gnu/pkgconfig/gl.pc /lib/x86_64-linux-gnu/pkgconfig/opengl.pc 
 # sudo apt install libvulkan-dev
 # download vulkan sdk to get shader compiler (glslc)
+# sudo apt install vulkan-sdk-dbgsym
 
 # selet all:
 # gg    -> go to begining of file

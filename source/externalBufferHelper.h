@@ -153,8 +153,8 @@ void createAllocatedBuffer(VkPhysicalDevice physicalDevice,
         .memoryTypeIndex = memTypeIndex,
     };
 
-    VkDeviceMemory pMemory;
-    if (auto result = vkAllocateMemory(device, &allocInfo, nullptr, &bufferMemory); 
+    VkDeviceMemory * pMemory;
+    if (auto result = vkAllocateMemory(device, &allocInfo, nullptr, pMemory); 
         result != VK_SUCCESS) 
     {
         printError(result);

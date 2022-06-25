@@ -24,8 +24,7 @@ VKTRACER_EXPORT VKAPI_ATTR VkResult VKAPI_CALL __HOOKED_vkAllocateMemory(VkDevic
     void* pHostPointer = nullptr;
     VkDeviceSize original_allocation_size = pAllocateInfo->allocationSize;
     if (UseMappedExternalHostMemoryExtension()) {
-        VkMemoryPropertyFlags propertyFlags =
-            getPageGuardControlInstance().getMemoryPropertyFlags(device, pAllocateInfo->memoryTypeIndex);
+        VkMemoryPropertyFlags propertyFlags = getPageGuardControlInstance().getMemoryPropertyFlags(device, pAllocateInfo->memoryTypeIndex);
         if ((propertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT) != 0) {
             // host visible memory, enable extension
             if (pAllocateInfo->pNext != nullptr) {
@@ -38,20 +37,16 @@ VKTRACER_EXPORT VKAPI_ATTR VkResult VKAPI_CALL __HOOKED_vkAllocateMemory(VkDevic
             // we insert our extension struct into the pNext chain.
             void** ppNext = const_cast<void**>(&(pAllocateInfo->pNext));
             *ppNext = &importMemoryHostPointerInfo;
-            reinterpret_cast<VkImportMemoryHostPointerInfoEXT*>(*ppNext)->sType =
-                VK_STRUCTURE_TYPE_IMPORT_MEMORY_HOST_POINTER_INFO_EXT;
-            reinterpret_cast<VkImportMemoryHostPointerInfoEXT*>(*ppNext)->handleType =
-                VK_EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT;
+            reinterpret_cast<VkImportMemoryHostPointerInfoEXT*>(*ppNext)->sType = VK_STRUCTURE_TYPE_IMPORT_MEMORY_HOST_POINTER_INFO_EXT;
+            reinterpret_cast<VkImportMemoryHostPointerInfoEXT*>(*ppNext)->handleType = VK_EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT;
             reinterpret_cast<VkImportMemoryHostPointerInfoEXT*>(*ppNext)->pNext = pNextOriginal;
             // provide the title host memory pointer which is already added
             // memory write watch.
             size_t page_size = pageguardGetSystemPageSize();
             if ((original_allocation_size % page_size) != 0) {
-                const_cast<VkMemoryAllocateInfo*>(pAllocateInfo)->allocationSize =
-                    pAllocateInfo->allocationSize - (pAllocateInfo->allocationSize % page_size) + page_size;
+                const_cast<VkMemoryAllocateInfo*>(pAllocateInfo)->allocationSize = pAllocateInfo->allocationSize - (pAllocateInfo->allocationSize % page_size) + page_size;
             }
-            reinterpret_cast<VkImportMemoryHostPointerInfoEXT*>(*ppNext)->pHostPointer =
-                pageguardAllocateMemory(pAllocateInfo->allocationSize);
+            reinterpret_cast<VkImportMemoryHostPointerInfoEXT*>(*ppNext)->pHostPointer = pageguardAllocateMemory(pAllocateInfo->allocationSize);
             pHostPointer = reinterpret_cast<VkImportMemoryHostPointerInfoEXT*>(*ppNext)->pHostPointer;
         }
     }
