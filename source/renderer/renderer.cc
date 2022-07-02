@@ -117,9 +117,6 @@ public:
         : mTextureProcesser(&device,
                             &physicalDevice,
                             &mSwapChainProcesser,
-                            // &swapChainImageViews,
-                            // &swapChainImages,
-                            // &swapChainImageFormat,
                             &commandPool,
                             &graphicsQueue)
 
