@@ -1,7 +1,7 @@
 [requires]
 # opencv/4.3.0@conan/stable
 # fmt/7.0.1
-# boost/1.79.0
+boost/1.79.0
 glew/2.2.0
 glfw/3.3.7
 sqlite3/3.32.3
@@ -9,6 +9,8 @@ openssl/3.0.2
 vulkan-headers/1.3.211.0
 glm/0.9.9.8
 stb/cci.20210910
+tinyobjloader/1.0.6
+volk/1.3.216.0
 
 [generators]
 cmake_find_package
@@ -20,6 +22,7 @@ cmake_find_package
 # sudo cp /lib/x86_64-linux-gnu/pkgconfig/gl.pc /lib/x86_64-linux-gnu/pkgconfig/opengl.pc 
 # sudo apt install libvulkan-dev
 # download vulkan sdk to get shader compiler (glslc)
+# sudo apt install vulkan-sdk-dbgsym
 
 # selet all:
 # gg    -> go to begining of file

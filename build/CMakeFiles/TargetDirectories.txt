@@ -1,5 +1,0 @@
-/media/giuliano/Data/my_programs/C++/vulkan/build/CMakeFiles/edit_cache.dir
-/media/giuliano/Data/my_programs/C++/vulkan/build/CMakeFiles/rebuild_cache.dir
-/media/giuliano/Data/my_programs/C++/vulkan/build/source/CMakeFiles/vulkanApp.dir
-/media/giuliano/Data/my_programs/C++/vulkan/build/source/CMakeFiles/edit_cache.dir
-/media/giuliano/Data/my_programs/C++/vulkan/build/source/CMakeFiles/rebuild_cache.dir

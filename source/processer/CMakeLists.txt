@@ -1,0 +1,13 @@
+add_executable(vertexProcessing main.cc)
+
+# find_package(OpenSSL)
+find_package(GLEW)
+find_package(glfw3)
+find_package(VulkanHeaders)
+find_package(glm)
+find_package(stb)
+find_package(tinyobjloader)
+# find_package(vulkan)
+find_package(Boost)
+find_package(volk)
+target_link_libraries(vertexProcessing Boost::boost GLEW::GLEW glfw Vulkan::Vulkan vulkan glm::glm)
