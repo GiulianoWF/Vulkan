@@ -3,7 +3,7 @@
 #include "volk.h"
 #include "vulkan/vulkan.h"
 
-// #define GLFW_INCLUDE_VULKAN
+#define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
 #define GLM_FORCE_RADIANS
@@ -49,19 +49,8 @@ const std::string TEXTURE_PATH = "textures/viking_room.png";
 
 const int MAX_FRAMES_IN_FLIGHT = 2;
 
-// #include "externalBufferHelper.h"
-
 const std::vector<const char*> validationLayers = {
     "VK_LAYER_KHRONOS_validation",
-    // "VK_LAYER_LUNARG_standard_validation"
-    // "VK_LAYER_LUNARG_api_dump",
-    // "VK_LAYER_LUNARG_core_validation",
-    // "VK_LAYER_LUNARG_image",
-    // "VK_LAYER_LUNARG_object_tracker",
-    // "VK_LAYER_LUNARG_parameter_validation",
-    // "VK_LAYER_LUNARG_swapchain",
-    // "VK_LAYER_GOOGLE_unique_objects",
-    // "VK_LAYER_GOOGLE_threading",
 };
 
 const std::vector<const char*> instanceExtensions = {
@@ -208,10 +197,6 @@ const std::vector<const char*> deviceExtensions = {
     // "VK_VALVE_mutable_descriptor_type",
 };
 
-const bool useSharedMemory = true;
-
-#define NDEBUG
-
 #ifdef NDEBUG
 const bool enableValidationLayers = false;
 #else
@@ -317,7 +302,7 @@ struct Refresh {
     int refreshIndex = 0;
 };
 
-class RendererApplication {
+class HelloTriangleApplication {
 public:
     void run() {
         initWindow();
@@ -337,7 +322,6 @@ private:
 
     void * StagingVertexData;
     void * StagingIndexData;
-    void * stagingVertexAllocatedBuffer;
 
     VkBuffer stagingVertexBuffer;
     VkDeviceMemory stagingVertexBufferMemory;
@@ -412,7 +396,7 @@ private:
     }
 
     static void framebufferResizeCallback(GLFWwindow* window, int width, int height) {
-        auto app = reinterpret_cast<RendererApplication *>(glfwGetWindowUserPointer(window));
+        auto app = reinterpret_cast<HelloTriangleApplication*>(glfwGetWindowUserPointer(window));
         app->framebufferResized = true;
     }
 
@@ -1243,88 +1227,68 @@ private:
         //                          Shared Memory Vertex
         //======================================================================================
         VkDeviceSize dataSize = sizeof(vertices[0]) * vertices.size();
-        // this->mSharedMemoryObjectBuffer = bi::shared_memory_object(bi::open_or_create
-        //                                                         ,"VertexBuffer"
-        //                                                         ,bi::read_write
-        //                                                     );
-        // this->mSharedMemoryObjectBuffer.truncate(dataSize);
-        // this->mMappedRegionBuffer = bi::mapped_region(this->mSharedMemoryObjectBuffer, bi::read_write);
+        this->mSharedMemoryObjectBuffer = bi::shared_memory_object(bi::open_or_create
+                                                                ,"VertexBuffer"
+                                                                ,bi::read_write
+                                                            );
+        this->mSharedMemoryObjectBuffer.truncate(dataSize);
+        this->mMappedRegionBuffer = bi::mapped_region(this->mSharedMemoryObjectBuffer, bi::read_write);
 
-        // memcpy(this->mMappedRegionBuffer.get_address(), vertices.data(), (size_t) dataSize);
-        // std::cout << "Verticies size " << dataSize << std::endl;
+        memcpy(this->mMappedRegionBuffer.get_address(), vertices.data(), (size_t) dataSize);
+        std::cout << "Verticies size " << dataSize << std::endl;
 
-        // //======================================================================================
-        // //                          Shared Memory Index
-        // //======================================================================================
-        // VkDeviceSize indexdataSize = sizeof(indices[0]) * indices.size();
-        // this->mSharedMemoryObjectIndex = bi::shared_memory_object(bi::open_or_create
-        //                                                         ,"IndexBuffer"
-        //                                                         ,bi::read_write
-        //                                                         );
-        // this->mSharedMemoryObjectIndex.truncate(indexdataSize);
-        // this->mMappedRegionBufferIndex = bi::mapped_region(this->mSharedMemoryObjectIndex, bi::read_write);
+        //======================================================================================
+        //                          Shared Memory Index
+        //======================================================================================
+        VkDeviceSize indexdataSize = sizeof(indices[0]) * indices.size();
+        this->mSharedMemoryObjectIndex = bi::shared_memory_object(bi::open_or_create
+                                                                ,"IndexBuffer"
+                                                                ,bi::read_write
+                                                                );
+        this->mSharedMemoryObjectIndex.truncate(indexdataSize);
+        this->mMappedRegionBufferIndex = bi::mapped_region(this->mSharedMemoryObjectIndex, bi::read_write);
 
-        // memcpy(this->mMappedRegionBufferIndex.get_address(), indices.data(), (size_t) indexdataSize);
+        memcpy(this->mMappedRegionBufferIndex.get_address(), indices.data(), (size_t) indexdataSize);
 
-        // //======================================================================================
-        // //                          Shared Memory Refresh
-        // //======================================================================================
-        // this->mSharedMemoryObjectRefresh = bi::shared_memory_object(bi::open_or_create
-        //                                                         ,"RefreshBuffer"
-        //                                                         ,bi::read_write
-        //                                                         );
-        // this->mSharedMemoryObjectRefresh.truncate(sizeof(Refresh));
-        // this->mMappedRegionBufferRefresh = bi::mapped_region(this->mSharedMemoryObjectRefresh, bi::read_write);
+        //======================================================================================
+        //                          Shared Memory Refresh
+        //======================================================================================
+        this->mSharedMemoryObjectRefresh = bi::shared_memory_object(bi::open_or_create
+                                                                ,"RefreshBuffer"
+                                                                ,bi::read_write
+                                                                );
+        this->mSharedMemoryObjectRefresh.truncate(sizeof(Refresh));
+        this->mMappedRegionBufferRefresh = bi::mapped_region(this->mSharedMemoryObjectRefresh, bi::read_write);
 
-        // this->bufferRefreshInfo = new (this->mMappedRegionBufferRefresh.get_address()) Refresh;
-        // new (&this->bufferRefreshInfo->mutex) boost::interprocess::interprocess_mutex{};
+        this->bufferRefreshInfo = new (this->mMappedRegionBufferRefresh.get_address()) Refresh;
+        new (&this->bufferRefreshInfo->mutex) boost::interprocess::interprocess_mutex{};
 
-        // memcpy(this->mMappedRegionBufferRefresh.get_address(), &this->bufferRefreshInfo, (size_t) sizeof(Refresh));
+        memcpy(this->mMappedRegionBufferRefresh.get_address(), &this->bufferRefreshInfo, (size_t) sizeof(Refresh));
 
-        // try{
-        //     if (this->bufferRefreshInfo->mutex.try_lock())
-        //     {
-        //         std::cout << "Could not lock" << std::endl;
-        //     }
-        //     this->bufferRefreshInfo->mutex.unlock();
-        // }
-        // catch(boost::interprocess::lock_exception& e)
-        // {
-        //     std::cout << e.what();
-        //     new (&this->bufferRefreshInfo->mutex) boost::interprocess::interprocess_mutex{};
-        // }
+        try{
+            if (this->bufferRefreshInfo->mutex.try_lock())
+            {
+                std::cout << "Could not lock" << std::endl;
+            }
+            this->bufferRefreshInfo->mutex.unlock();
+        }
+        catch(boost::interprocess::lock_exception& e)
+        {
+            std::cout << e.what();
+            new (&this->bufferRefreshInfo->mutex) boost::interprocess::interprocess_mutex{};
+        }
     }
 
     void createVertexBuffer() {
-        if(useSharedMemory)
-        {
-            auto minPage = GetMinImportedHostPointerAlignment(physicalDevice);
-            std::cout << "Min page is " << minPage << std::endl;
-            stagingVertexAllocatedBuffer = malloc(minPage);
+        void * dataa;
+        VkBuffer mallocBuffer;
+        VkDeviceMemory mallocBufferMemory;
 
-            // void * StagingVertexData;
-            // void * StagingIndexData;
-            // void * stagingVertexAllocatedBuffer;
-
-            // VkBuffer stagingVertexBuffer;
-            // VkDeviceMemory stagingVertexBufferMemory;
-            // VkBuffer stagingIndexBuffer;
-            // VkDeviceMemory stagingIndexBufferMemory;
-
-            // createMallocedBuffer(physicalDevice, device, minPage, stagingVertexAllocatedBuffer, stagingVertexBuffer, stagingVertexBufferMemory);
-        }
-        else
-        {
-            createVertexBufferInner();
-        } 
-    }
-
-    void createVertexBufferInner() {
+        // createMallocedBuffer(physicalDevice, device, dataa, mallocBuffer, mallocBufferMemory);
     //         void * StagingVertexData;
     // void * StagingIndexData;
 
-    // VkBuffer stagingVertexBuffer;
-    // VkDeviceMemory stagingVertexBufferMemory;
+
 
         VkDeviceSize dataSize = sizeof(vertices[0]) * vertices.size();
 
@@ -1652,53 +1616,53 @@ private:
     }
 
     void drawFrame() {
-        // try
-        // {
-        //     struct Lock{
-        //         boost::interprocess::interprocess_mutex * ptr;
-        //         bool lockAquired = false;
+        try
+        {
+            struct Lock{
+                boost::interprocess::interprocess_mutex * ptr;
+                bool lockAquired = false;
 
-        //         Lock(boost::interprocess::interprocess_mutex * p):ptr(p)
-        //         {
-        //             lockAquired = ptr->try_lock();
-        //         };
+                Lock(boost::interprocess::interprocess_mutex * p):ptr(p)
+                {
+                    lockAquired = ptr->try_lock();
+                };
 
-        //         ~Lock()
-        //         {
-        //             if(lockAquired) ptr->unlock();
-        //         };
+                ~Lock()
+                {
+                    if(lockAquired) ptr->unlock();
+                };
 
-        //         bool getState()
-        //         {
-        //             return lockAquired;
-        //         };
-        //     } lock (&this->bufferRefreshInfo->mutex);
+                bool getState()
+                {
+                    return lockAquired;
+                };
+            } lock (&this->bufferRefreshInfo->mutex);
             
-        //     if(lock.getState())
-        //     {
-        //         auto pending = this->updatePending();
+            if(lock.getState())
+            {
+                auto pending = this->updatePending();
 
-        //         if(pending & (uint8_t)RefreshEnum::UPDATE_INDEX)
-        //         {
-        //             updateIndexBuffer();
-        //             this->bufferRefreshInfo->refreshIndex = 0;
-        //         }
+                if(pending & (uint8_t)RefreshEnum::UPDATE_INDEX)
+                {
+                    updateIndexBuffer();
+                    this->bufferRefreshInfo->refreshIndex = 0;
+                }
 
-        //         if(pending & (uint8_t)RefreshEnum::UPDATE_VERTEX)
-        //         {
-        //             updateVertexBuffer();
-        //             this->bufferRefreshInfo->refreshVertex = 0;
-        //         }
-        //     }
-        //     else
-        //     {
-        //         std::cout << "Have not get refreash lock." << std::endl;
-        //     }
-        // }
-        // catch (boost::interprocess::lock_exception& e)
-        // {
-        //     std::cout << e.what() << std::endl;
-        // }
+                if(pending & (uint8_t)RefreshEnum::UPDATE_VERTEX)
+                {
+                    updateVertexBuffer();
+                    this->bufferRefreshInfo->refreshVertex = 0;
+                }
+            }
+            else
+            {
+                std::cout << "Have not get refreash lock." << std::endl;
+            }
+        }
+        catch (boost::interprocess::lock_exception& e)
+        {
+            std::cout << e.what() << std::endl;
+        }
 
         vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
@@ -1789,7 +1753,6 @@ private:
 
     VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes) {
         for (const auto& availablePresentMode : availablePresentModes) {
-            // if (availablePresentMode == VK_PRESENT_MODE_MAILBOX_KHR) {
             if (availablePresentMode == VK_PRESENT_MODE_IMMEDIATE_KHR) {
                 return availablePresentMode;
             }
@@ -1842,8 +1805,6 @@ private:
     }
 
     bool isDeviceSuitable(VkPhysicalDevice device) {
-        // PrintDeviceName(device);
-
         QueueFamilyIndices indices = findQueueFamilies(device);
 
         bool extensionsSupported = checkDeviceExtensionSupport(device);
@@ -1871,15 +1832,6 @@ private:
 
         for (const auto& extension : availableExtensions) {
             requiredExtensions.erase(extension.extensionName);
-        }
-
-        if(!requiredExtensions.empty())
-        {
-            std::cout << "Device missing extensions:" << std::endl;
-            for(const auto& exten : requiredExtensions)
-            {
-                std::cout << exten << std::endl;
-            }
         }
 
         return requiredExtensions.empty();
@@ -1933,11 +1885,11 @@ private:
             extensions.push_back(entry);
         }
 
-        // std::cout << "Instance extensions: " << std::endl;
-        // for (auto const& entry : extensions)
-        // {
-        //     std::cout << entry << std::endl;
-        // }
+        std::cout << "Instance extensions: " << std::endl;
+        for (auto const& entry : extensions)
+        {
+            std::cout << entry << std::endl;
+        }
 
         return extensions;
     }
@@ -1995,7 +1947,7 @@ private:
 };
 
 int main() {
-    RendererApplication app;
+    HelloTriangleApplication app;
 
     try {
         app.run();
