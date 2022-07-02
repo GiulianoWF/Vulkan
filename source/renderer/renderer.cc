@@ -34,10 +34,7 @@
 #include <algorithm>
 #include <sstream>
 
-#include <boost/interprocess/sync/interprocess_mutex.hpp>
-#include <boost/interprocess/shared_memory_object.hpp>
-#include <boost/interprocess/mapped_region.hpp>
-namespace bi = boost::interprocess;
+#include "interprocess_support.h"
 
 const std::string MODEL_PATH = "models/viking_room.obj";
 const std::string TEXTURE_PATH = "textures/viking_room.png";
@@ -99,14 +96,6 @@ struct Vertex {
     }
 };
 
-namespace std {
-    template<> struct hash<Vertex> {
-        size_t operator()(Vertex const& vertex) const {
-            return ((hash<glm::vec3>()(vertex.pos) ^ (hash<glm::vec3>()(vertex.color) << 1)) >> 1) ^ (hash<glm::vec2>()(vertex.texCoord) << 1);
-        }
-    };
-}
-
 struct UniformBufferObject {
     alignas(16) glm::mat4 model;
     alignas(16) glm::mat4 view;
@@ -115,21 +104,10 @@ struct UniformBufferObject {
 
 #include "externalBufferHelper.h"
 
-enum struct RefreshEnum : uint8_t
-{
-    UPDATE_VERTEX = 1 << 0,
-    UPDATE_INDEX = 1 << 1,
-};
-
-struct Refresh {
-    boost::interprocess::interprocess_mutex mutex;
-    int refreshVertex = 0;
-    int refreshIndex = 0;
-};
-
 class HelloTriangleApplication
     : public GlfwSupport
     , public TinyObjLoaderSupport
+    , public InterprocessSupport
 {
 public:
     void run() {
@@ -140,16 +118,8 @@ public:
     }
 
 private:
-    boost::interprocess::shared_memory_object mSharedMemoryObjectBuffer;
-    boost::interprocess::mapped_region mMappedRegionBuffer;
-    boost::interprocess::shared_memory_object mSharedMemoryObjectIndex;
-    boost::interprocess::mapped_region mMappedRegionBufferIndex;
-    boost::interprocess::shared_memory_object mSharedMemoryObjectRefresh;
-    boost::interprocess::mapped_region mMappedRegionBufferRefresh;
-    Refresh * bufferRefreshInfo;
-
-    void * StagingVertexData;
-    void * StagingIndexData;
+    void * mStagingVertexDataHandler_ptr;
+    void * mStagingIndexDataHandler_ptr;
 
     VkBuffer stagingVertexBuffer;
     VkDeviceMemory stagingVertexBufferMemory;
@@ -233,9 +203,12 @@ private:
         createTextureImage();
         createTextureImageView();
         createTextureSampler();
-        loadModel();
+
+        mLoadModel(MODEL_PATH);
         createVertexBuffer();
         createIndexBuffer();
+        mCreateInterprocessLinks(mGetModelVertexDataSize(), mStagingVertexDataHandler_ptr, mGetModelIndicesDataSize(), mStagingIndexDataHandler_ptr);
+
         createUniformBuffers();
         createDescriptorPool();
         createDescriptorSets();
@@ -991,64 +964,6 @@ private:
         endSingleTimeCommands(commandBuffer);
     }
 
-    void loadModel() {
-        mLoadModel(MODEL_PATH);
-
-        //======================================================================================
-        //                          Shared Memory Vertex
-        //======================================================================================
-        VkDeviceSize dataSize = mGetModelVertexDataSize();
-        this->mSharedMemoryObjectBuffer = bi::shared_memory_object(bi::open_or_create
-                                                                ,"VertexBuffer"
-                                                                ,bi::read_write
-                                                            );
-        this->mSharedMemoryObjectBuffer.truncate(dataSize);
-        this->mMappedRegionBuffer = bi::mapped_region(this->mSharedMemoryObjectBuffer, bi::read_write);
-
-        mCopyModelVertexDataTo(this->mMappedRegionBuffer.get_address());
-
-        //======================================================================================
-        //                          Shared Memory Index
-        //======================================================================================
-        VkDeviceSize indexdataSize = mGetModelIndicesDataSize();
-        this->mSharedMemoryObjectIndex = bi::shared_memory_object(bi::open_or_create
-                                                                ,"IndexBuffer"
-                                                                ,bi::read_write
-                                                                );
-        this->mSharedMemoryObjectIndex.truncate(indexdataSize);
-        this->mMappedRegionBufferIndex = bi::mapped_region(this->mSharedMemoryObjectIndex, bi::read_write);
-
-        mCopyModelIndicesDataTo(this->mMappedRegionBufferIndex.get_address());
-
-        //======================================================================================
-        //                          Shared Memory Refresh
-        //======================================================================================
-        this->mSharedMemoryObjectRefresh = bi::shared_memory_object(bi::open_or_create
-                                                                ,"RefreshBuffer"
-                                                                ,bi::read_write
-                                                                );
-        this->mSharedMemoryObjectRefresh.truncate(sizeof(Refresh));
-        this->mMappedRegionBufferRefresh = bi::mapped_region(this->mSharedMemoryObjectRefresh, bi::read_write);
-
-        this->bufferRefreshInfo = new (this->mMappedRegionBufferRefresh.get_address()) Refresh;
-        new (&this->bufferRefreshInfo->mutex) boost::interprocess::interprocess_mutex{};
-
-        memcpy(this->mMappedRegionBufferRefresh.get_address(), &this->bufferRefreshInfo, (size_t) sizeof(Refresh));
-
-        try{
-            if (this->bufferRefreshInfo->mutex.try_lock())
-            {
-                std::cout << "Could not lock" << std::endl;
-            }
-            this->bufferRefreshInfo->mutex.unlock();
-        }
-        catch(boost::interprocess::lock_exception& e)
-        {
-            std::cout << e.what();
-            new (&this->bufferRefreshInfo->mutex) boost::interprocess::interprocess_mutex{};
-        }
-    }
-
     void createVertexBuffer() {
         VkDeviceSize dataSize = mGetModelVertexDataSize();
 
@@ -1057,8 +972,8 @@ private:
         //====================================================================
         createBuffer(dataSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, this->stagingVertexBuffer, this->stagingVertexBufferMemory);
 
-        vkMapMemory(device, this->stagingVertexBufferMemory, 0, dataSize, 0, &StagingVertexData);
-        mCopyModelVertexDataTo(StagingVertexData);
+        vkMapMemory(device, this->stagingVertexBufferMemory, 0, dataSize, 0, &mStagingVertexDataHandler_ptr);
+        mCopyModelVertexDataTo(mStagingVertexDataHandler_ptr);
 
         //====================================================================
         //                          Vertex buffer
@@ -1066,6 +981,8 @@ private:
         createBuffer(dataSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vertexBuffer, vertexBufferMemory);
 
         copyBuffer(this->stagingVertexBuffer, vertexBuffer, dataSize);
+
+        mUpdateStagingVertexBufferInfo(mGetModelVertexDataSize(), mStagingVertexDataHandler_ptr);
     }
 
     void createIndexBuffer() {
@@ -1341,78 +1258,23 @@ private:
         vkUnmapMemory(device, uniformBuffersMemory[currentImage]);
     }
 
-    uint8_t updatePending() {
-        uint8_t retVal = 0;
-        if(this->bufferRefreshInfo->refreshIndex)
-        {
-            retVal |= (uint8_t)RefreshEnum::UPDATE_INDEX;
-        }
-        if(this->bufferRefreshInfo->refreshVertex)
-        {
-            std::cout << "Must update Vertex" << std::endl;
-            retVal |= (uint8_t)RefreshEnum::UPDATE_VERTEX;
-        }
-        return retVal;
+    void mDownloadVertexBuffer()
+    {
+        copyBuffer(this->stagingVertexBuffer, vertexBuffer, mGetModelVertexDataSize());
     }
 
-    void updateVertexBuffer() {
-        std::cout << "Updating Buffer" << std::endl;
-        VkDeviceSize dataSize = mGetModelVertexDataSize();
-        memcpy(StagingVertexData, this->mMappedRegionBuffer.get_address(), (size_t) dataSize);
-        copyBuffer(this->stagingVertexBuffer, vertexBuffer, dataSize);
-    }
-
-    void updateIndexBuffer() {
+    void mDownloadIndexBuffer()
+    {
 
     }
 
     void drawFrame() {
-        try
+        mInterprocessUpdateStagingBuffersIfNeeded();
+
+        if(mVertexDownloadPending)
         {
-            struct Lock{
-                boost::interprocess::interprocess_mutex * ptr;
-                bool lockAquired = false;
-
-                Lock(boost::interprocess::interprocess_mutex * p):ptr(p)
-                {
-                    lockAquired = ptr->try_lock();
-                };
-
-                ~Lock()
-                {
-                    if(lockAquired) ptr->unlock();
-                };
-
-                bool getState()
-                {
-                    return lockAquired;
-                };
-            } lock (&this->bufferRefreshInfo->mutex);
-            
-            if(lock.getState())
-            {
-                auto pending = this->updatePending();
-
-                if(pending & (uint8_t)RefreshEnum::UPDATE_INDEX)
-                {
-                    updateIndexBuffer();
-                    this->bufferRefreshInfo->refreshIndex = 0;
-                }
-
-                if(pending & (uint8_t)RefreshEnum::UPDATE_VERTEX)
-                {
-                    updateVertexBuffer();
-                    this->bufferRefreshInfo->refreshVertex = 0;
-                }
-            }
-            else
-            {
-                std::cout << "Have not get refreash lock." << std::endl;
-            }
-        }
-        catch (boost::interprocess::lock_exception& e)
-        {
-            std::cout << e.what() << std::endl;
+            mDownloadVertexBuffer();
+            mVertexDownloadPending = false;
         }
 
         vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
