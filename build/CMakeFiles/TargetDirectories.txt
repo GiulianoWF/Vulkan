@@ -1,5 +1,14 @@
 /media/giuliano/Data/my_programs/C++/vulkan/build/CMakeFiles/edit_cache.dir
 /media/giuliano/Data/my_programs/C++/vulkan/build/CMakeFiles/rebuild_cache.dir
-/media/giuliano/Data/my_programs/C++/vulkan/build/source/CMakeFiles/vulkanApp.dir
 /media/giuliano/Data/my_programs/C++/vulkan/build/source/CMakeFiles/edit_cache.dir
 /media/giuliano/Data/my_programs/C++/vulkan/build/source/CMakeFiles/rebuild_cache.dir
+/media/giuliano/Data/my_programs/C++/vulkan/build/source/renderer/CMakeFiles/vulkanApp.dir
+/media/giuliano/Data/my_programs/C++/vulkan/build/source/renderer/CMakeFiles/edit_cache.dir
+/media/giuliano/Data/my_programs/C++/vulkan/build/source/renderer/CMakeFiles/rebuild_cache.dir
+/media/giuliano/Data/my_programs/C++/vulkan/build/source/processer/CMakeFiles/vertexProcessing.dir
+/media/giuliano/Data/my_programs/C++/vulkan/build/source/processer/CMakeFiles/edit_cache.dir
+/media/giuliano/Data/my_programs/C++/vulkan/build/source/processer/CMakeFiles/rebuild_cache.dir
+/media/giuliano/Data/my_programs/C++/vulkan/build/shaders/CMakeFiles/GenerateShaderFrag.dir
+/media/giuliano/Data/my_programs/C++/vulkan/build/shaders/CMakeFiles/GenerateShaderVert.dir
+/media/giuliano/Data/my_programs/C++/vulkan/build/shaders/CMakeFiles/edit_cache.dir
+/media/giuliano/Data/my_programs/C++/vulkan/build/shaders/CMakeFiles/rebuild_cache.dir

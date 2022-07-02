@@ -99,9 +99,9 @@ endif()
 #############################################################################################
 
 
-set(SQLite_INCLUDE_DIRS "/home/giuliano/.conan/data/sqlite3/3.32.3/_/_/package/69ef158e99e121753deefb573cb3bcdf861ce7a5/include")
-set(SQLite_INCLUDE_DIR "/home/giuliano/.conan/data/sqlite3/3.32.3/_/_/package/69ef158e99e121753deefb573cb3bcdf861ce7a5/include")
-set(SQLite_INCLUDES "/home/giuliano/.conan/data/sqlite3/3.32.3/_/_/package/69ef158e99e121753deefb573cb3bcdf861ce7a5/include")
+set(SQLite_INCLUDE_DIRS "/home/giuliano/.conan/data/sqlite3/3.32.3/_/_/package/40c3263164d35e4a796efa021c157822a6b71be6/include")
+set(SQLite_INCLUDE_DIR "/home/giuliano/.conan/data/sqlite3/3.32.3/_/_/package/40c3263164d35e4a796efa021c157822a6b71be6/include")
+set(SQLite_INCLUDES "/home/giuliano/.conan/data/sqlite3/3.32.3/_/_/package/40c3263164d35e4a796efa021c157822a6b71be6/include")
 set(SQLite_RES_DIRS )
 set(SQLite_DEFINITIONS )
 set(SQLite_LINKER_FLAGS_LIST
@@ -120,7 +120,7 @@ set(SQLite_SYSTEM_LIBS pthread dl)
 set(SQLite_FRAMEWORK_DIRS )
 set(SQLite_FRAMEWORKS )
 set(SQLite_FRAMEWORKS_FOUND "") # Will be filled later
-set(SQLite_BUILD_MODULES_PATHS "/home/giuliano/.conan/data/sqlite3/3.32.3/_/_/package/69ef158e99e121753deefb573cb3bcdf861ce7a5/lib/cmake/conan-official-sqlite3-variables.cmake")
+set(SQLite_BUILD_MODULES_PATHS "/home/giuliano/.conan/data/sqlite3/3.32.3/_/_/package/40c3263164d35e4a796efa021c157822a6b71be6/lib/cmake/conan-official-sqlite3-variables.cmake")
 
 conan_find_apple_frameworks(SQLite_FRAMEWORKS_FOUND "${SQLite_FRAMEWORKS}" "${SQLite_FRAMEWORK_DIRS}")
 
@@ -137,7 +137,7 @@ mark_as_advanced(SQLite_INCLUDE_DIRS
 
 # Find the real .lib/.a and add them to SQLite_LIBS and SQLite_LIBRARY_LIST
 set(SQLite_LIBRARY_LIST sqlite3)
-set(SQLite_LIB_DIRS "/home/giuliano/.conan/data/sqlite3/3.32.3/_/_/package/69ef158e99e121753deefb573cb3bcdf861ce7a5/lib")
+set(SQLite_LIB_DIRS "/home/giuliano/.conan/data/sqlite3/3.32.3/_/_/package/40c3263164d35e4a796efa021c157822a6b71be6/lib")
 
 # Gather all the libraries that should be linked to the targets (do not touch existing variables):
 set(_SQLite_DEPENDENCIES "${SQLite_FRAMEWORKS_FOUND} ${SQLite_SYSTEM_LIBS} ")
@@ -166,16 +166,16 @@ endforeach()
 set(SQLite_LIBRARIES_TARGETS "${SQLite_LIBRARIES_TARGETS};")
 set(SQLite_LIBRARIES "${SQLite_LIBRARIES};")
 
-set(CMAKE_MODULE_PATH "/home/giuliano/.conan/data/sqlite3/3.32.3/_/_/package/69ef158e99e121753deefb573cb3bcdf861ce7a5/" ${CMAKE_MODULE_PATH})
-set(CMAKE_PREFIX_PATH "/home/giuliano/.conan/data/sqlite3/3.32.3/_/_/package/69ef158e99e121753deefb573cb3bcdf861ce7a5/" ${CMAKE_PREFIX_PATH})
+set(CMAKE_MODULE_PATH "/home/giuliano/.conan/data/sqlite3/3.32.3/_/_/package/40c3263164d35e4a796efa021c157822a6b71be6/" ${CMAKE_MODULE_PATH})
+set(CMAKE_PREFIX_PATH "/home/giuliano/.conan/data/sqlite3/3.32.3/_/_/package/40c3263164d35e4a796efa021c157822a6b71be6/" ${CMAKE_PREFIX_PATH})
 
 
 ########### COMPONENT SQLite3 VARIABLES #############################################
 
-set(SQLite_SQLite3_INCLUDE_DIRS "/home/giuliano/.conan/data/sqlite3/3.32.3/_/_/package/69ef158e99e121753deefb573cb3bcdf861ce7a5/include")
-set(SQLite_SQLite3_INCLUDE_DIR "/home/giuliano/.conan/data/sqlite3/3.32.3/_/_/package/69ef158e99e121753deefb573cb3bcdf861ce7a5/include")
-set(SQLite_SQLite3_INCLUDES "/home/giuliano/.conan/data/sqlite3/3.32.3/_/_/package/69ef158e99e121753deefb573cb3bcdf861ce7a5/include")
-set(SQLite_SQLite3_LIB_DIRS "/home/giuliano/.conan/data/sqlite3/3.32.3/_/_/package/69ef158e99e121753deefb573cb3bcdf861ce7a5/lib")
+set(SQLite_SQLite3_INCLUDE_DIRS "/home/giuliano/.conan/data/sqlite3/3.32.3/_/_/package/40c3263164d35e4a796efa021c157822a6b71be6/include")
+set(SQLite_SQLite3_INCLUDE_DIR "/home/giuliano/.conan/data/sqlite3/3.32.3/_/_/package/40c3263164d35e4a796efa021c157822a6b71be6/include")
+set(SQLite_SQLite3_INCLUDES "/home/giuliano/.conan/data/sqlite3/3.32.3/_/_/package/40c3263164d35e4a796efa021c157822a6b71be6/include")
+set(SQLite_SQLite3_LIB_DIRS "/home/giuliano/.conan/data/sqlite3/3.32.3/_/_/package/40c3263164d35e4a796efa021c157822a6b71be6/lib")
 set(SQLite_SQLite3_RES_DIRS )
 set(SQLite_SQLite3_DEFINITIONS )
 set(SQLite_SQLite3_COMPILE_DEFINITIONS )
@@ -185,7 +185,7 @@ set(SQLite_SQLite3_LIBS sqlite3)
 set(SQLite_SQLite3_SYSTEM_LIBS pthread dl)
 set(SQLite_SQLite3_FRAMEWORK_DIRS )
 set(SQLite_SQLite3_FRAMEWORKS )
-set(SQLite_SQLite3_BUILD_MODULES_PATHS "/home/giuliano/.conan/data/sqlite3/3.32.3/_/_/package/69ef158e99e121753deefb573cb3bcdf861ce7a5/lib/cmake/conan-official-sqlite3-variables.cmake")
+set(SQLite_SQLite3_BUILD_MODULES_PATHS "/home/giuliano/.conan/data/sqlite3/3.32.3/_/_/package/40c3263164d35e4a796efa021c157822a6b71be6/lib/cmake/conan-official-sqlite3-variables.cmake")
 set(SQLite_SQLite3_DEPENDENCIES )
 set(SQLite_SQLite3_LINKER_FLAGS_LIST
         "$<$<STREQUAL:$<TARGET_PROPERTY:TYPE>,SHARED_LIBRARY>:>"
@@ -221,8 +221,8 @@ conan_package_library_targets("${SQLite_SQLite3_LIBS}"
 
 set(SQLite_SQLite3_LINK_LIBS ${SQLite_SQLite3_LIB_TARGETS} ${SQLite_SQLite3_LIBS_FRAMEWORKS_DEPS})
 
-set(CMAKE_MODULE_PATH "/home/giuliano/.conan/data/sqlite3/3.32.3/_/_/package/69ef158e99e121753deefb573cb3bcdf861ce7a5/" ${CMAKE_MODULE_PATH})
-set(CMAKE_PREFIX_PATH "/home/giuliano/.conan/data/sqlite3/3.32.3/_/_/package/69ef158e99e121753deefb573cb3bcdf861ce7a5/" ${CMAKE_PREFIX_PATH})
+set(CMAKE_MODULE_PATH "/home/giuliano/.conan/data/sqlite3/3.32.3/_/_/package/40c3263164d35e4a796efa021c157822a6b71be6/" ${CMAKE_MODULE_PATH})
+set(CMAKE_PREFIX_PATH "/home/giuliano/.conan/data/sqlite3/3.32.3/_/_/package/40c3263164d35e4a796efa021c157822a6b71be6/" ${CMAKE_PREFIX_PATH})
 
 
 ########## TARGETS ##########################################################################

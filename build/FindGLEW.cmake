@@ -99,9 +99,9 @@ endif()
 #############################################################################################
 
 
-set(GLEW_INCLUDE_DIRS "/home/giuliano/.conan/data/glew/2.2.0/_/_/package/44741af961cbe3bae7bd261b66459e5b6dc65693/include")
-set(GLEW_INCLUDE_DIR "/home/giuliano/.conan/data/glew/2.2.0/_/_/package/44741af961cbe3bae7bd261b66459e5b6dc65693/include")
-set(GLEW_INCLUDES "/home/giuliano/.conan/data/glew/2.2.0/_/_/package/44741af961cbe3bae7bd261b66459e5b6dc65693/include")
+set(GLEW_INCLUDE_DIRS "/home/giuliano/.conan/data/glew/2.2.0/_/_/package/fba319405f1ceb59f400f9efe782c115eaac6f93/include")
+set(GLEW_INCLUDE_DIR "/home/giuliano/.conan/data/glew/2.2.0/_/_/package/fba319405f1ceb59f400f9efe782c115eaac6f93/include")
+set(GLEW_INCLUDES "/home/giuliano/.conan/data/glew/2.2.0/_/_/package/fba319405f1ceb59f400f9efe782c115eaac6f93/include")
 set(GLEW_RES_DIRS )
 set(GLEW_DEFINITIONS )
 set(GLEW_LINKER_FLAGS_LIST
@@ -137,7 +137,7 @@ mark_as_advanced(GLEW_INCLUDE_DIRS
 
 # Find the real .lib/.a and add them to GLEW_LIBS and GLEW_LIBRARY_LIST
 set(GLEW_LIBRARY_LIST GLEWd)
-set(GLEW_LIB_DIRS "/home/giuliano/.conan/data/glew/2.2.0/_/_/package/44741af961cbe3bae7bd261b66459e5b6dc65693/lib")
+set(GLEW_LIB_DIRS "/home/giuliano/.conan/data/glew/2.2.0/_/_/package/fba319405f1ceb59f400f9efe782c115eaac6f93/lib")
 
 # Gather all the libraries that should be linked to the targets (do not touch existing variables):
 set(_GLEW_DEPENDENCIES "${GLEW_FRAMEWORKS_FOUND} ${GLEW_SYSTEM_LIBS} opengl::opengl;glu::glu")
@@ -166,16 +166,16 @@ endforeach()
 set(GLEW_LIBRARIES_TARGETS "${GLEW_LIBRARIES_TARGETS};opengl::opengl;glu::glu")
 set(GLEW_LIBRARIES "${GLEW_LIBRARIES};opengl::opengl;glu::glu")
 
-set(CMAKE_MODULE_PATH "/home/giuliano/.conan/data/glew/2.2.0/_/_/package/44741af961cbe3bae7bd261b66459e5b6dc65693/" ${CMAKE_MODULE_PATH})
-set(CMAKE_PREFIX_PATH "/home/giuliano/.conan/data/glew/2.2.0/_/_/package/44741af961cbe3bae7bd261b66459e5b6dc65693/" ${CMAKE_PREFIX_PATH})
+set(CMAKE_MODULE_PATH "/home/giuliano/.conan/data/glew/2.2.0/_/_/package/fba319405f1ceb59f400f9efe782c115eaac6f93/" ${CMAKE_MODULE_PATH})
+set(CMAKE_PREFIX_PATH "/home/giuliano/.conan/data/glew/2.2.0/_/_/package/fba319405f1ceb59f400f9efe782c115eaac6f93/" ${CMAKE_PREFIX_PATH})
 
 
 ########### COMPONENT GLEW VARIABLES #############################################
 
-set(GLEW_GLEW_INCLUDE_DIRS "/home/giuliano/.conan/data/glew/2.2.0/_/_/package/44741af961cbe3bae7bd261b66459e5b6dc65693/include")
-set(GLEW_GLEW_INCLUDE_DIR "/home/giuliano/.conan/data/glew/2.2.0/_/_/package/44741af961cbe3bae7bd261b66459e5b6dc65693/include")
-set(GLEW_GLEW_INCLUDES "/home/giuliano/.conan/data/glew/2.2.0/_/_/package/44741af961cbe3bae7bd261b66459e5b6dc65693/include")
-set(GLEW_GLEW_LIB_DIRS "/home/giuliano/.conan/data/glew/2.2.0/_/_/package/44741af961cbe3bae7bd261b66459e5b6dc65693/lib")
+set(GLEW_GLEW_INCLUDE_DIRS "/home/giuliano/.conan/data/glew/2.2.0/_/_/package/fba319405f1ceb59f400f9efe782c115eaac6f93/include")
+set(GLEW_GLEW_INCLUDE_DIR "/home/giuliano/.conan/data/glew/2.2.0/_/_/package/fba319405f1ceb59f400f9efe782c115eaac6f93/include")
+set(GLEW_GLEW_INCLUDES "/home/giuliano/.conan/data/glew/2.2.0/_/_/package/fba319405f1ceb59f400f9efe782c115eaac6f93/include")
+set(GLEW_GLEW_LIB_DIRS "/home/giuliano/.conan/data/glew/2.2.0/_/_/package/fba319405f1ceb59f400f9efe782c115eaac6f93/lib")
 set(GLEW_GLEW_RES_DIRS )
 set(GLEW_GLEW_DEFINITIONS )
 set(GLEW_GLEW_COMPILE_DEFINITIONS )
@@ -233,8 +233,8 @@ conan_package_library_targets("${GLEW_GLEW_LIBS}"
 
 set(GLEW_GLEW_LINK_LIBS ${GLEW_GLEW_LIB_TARGETS} ${GLEW_GLEW_LIBS_FRAMEWORKS_DEPS})
 
-set(CMAKE_MODULE_PATH "/home/giuliano/.conan/data/glew/2.2.0/_/_/package/44741af961cbe3bae7bd261b66459e5b6dc65693/" ${CMAKE_MODULE_PATH})
-set(CMAKE_PREFIX_PATH "/home/giuliano/.conan/data/glew/2.2.0/_/_/package/44741af961cbe3bae7bd261b66459e5b6dc65693/" ${CMAKE_PREFIX_PATH})
+set(CMAKE_MODULE_PATH "/home/giuliano/.conan/data/glew/2.2.0/_/_/package/fba319405f1ceb59f400f9efe782c115eaac6f93/" ${CMAKE_MODULE_PATH})
+set(CMAKE_PREFIX_PATH "/home/giuliano/.conan/data/glew/2.2.0/_/_/package/fba319405f1ceb59f400f9efe782c115eaac6f93/" ${CMAKE_PREFIX_PATH})
 
 
 ########## TARGETS ##########################################################################

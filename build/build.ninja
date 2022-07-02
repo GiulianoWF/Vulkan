@@ -68,41 +68,6 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 # /media/giuliano/Data/my_programs/C++/vulkan/CMakeLists.txt
 # =============================================================================
 
-# =============================================================================
-# Object build statements for EXECUTABLE target vulkanApp
-
-
-#############################################
-# Order-only phony target for vulkanApp
-
-build cmake_object_order_depends_target_vulkanApp: phony || source/CMakeFiles/vulkanApp.dir
-
-build source/CMakeFiles/vulkanApp.dir/main.cc.o: CXX_COMPILER__vulkanApp_Debug /media/giuliano/Data/my_programs/C++/vulkan/source/main.cc || cmake_object_order_depends_target_vulkanApp
-  DEFINES = -DHAS_FCHOWN -DHAS_STICKY_DIR_BIT -D_BSD_SOURCE -D_DEFAULT_SOURCE -D_WIN32_WINNT=0x0601
-  DEP_FILE = source/CMakeFiles/vulkanApp.dir/main.cc.o.d
-  FLAGS = -g
-  INCLUDES = -isystem /home/giuliano/.conan/data/glew/2.2.0/_/_/package/44741af961cbe3bae7bd261b66459e5b6dc65693/include -isystem /home/giuliano/.conan/data/glfw/3.3.7/_/_/package/08f4c711a76082a8ca8e8d4783b15f190b7d8e79/include -isystem /usr/include/uuid -isystem /home/giuliano/.conan/data/vulkan-headers/1.3.211.0/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include -isystem /home/giuliano/.conan/data/vulkan-headers/1.3.211.0/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/res/vulkan/registry -isystem /home/giuliano/.conan/data/glm/0.9.9.8/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include
-  OBJECT_DIR = source/CMakeFiles/vulkanApp.dir
-  OBJECT_FILE_DIR = source/CMakeFiles/vulkanApp.dir
-
-
-# =============================================================================
-# Link build statements for EXECUTABLE target vulkanApp
-
-
-#############################################
-# Link the executable ../bin/vulkanApp
-
-build ../bin/vulkanApp: CXX_EXECUTABLE_LINKER__vulkanApp_Debug source/CMakeFiles/vulkanApp.dir/main.cc.o | /home/giuliano/.conan/data/glew/2.2.0/_/_/package/44741af961cbe3bae7bd261b66459e5b6dc65693/lib/libGLEWd.a /home/giuliano/.conan/data/glfw/3.3.7/_/_/package/08f4c711a76082a8ca8e8d4783b15f190b7d8e79/lib/libglfw3.a
-  FLAGS = -g
-  LINK_LIBRARIES = -Wl,-rpath,/home/giuliano/.conan/data/glew/2.2.0/_/_/package/44741af961cbe3bae7bd261b66459e5b6dc65693/lib  -lvulkan  /home/giuliano/.conan/data/glew/2.2.0/_/_/package/44741af961cbe3bae7bd261b66459e5b6dc65693/lib/libGLEWd.a  -lGLU  /home/giuliano/.conan/data/glfw/3.3.7/_/_/package/08f4c711a76082a8ca8e8d4783b15f190b7d8e79/lib/libglfw3.a  -lGL  -lm  -lpthread  -ldl  -lrt  -lX11-xcb  -lfontenc  -lICE  -lSM  -lXau  -lXaw7  -lXcomposite  -lXcursor  -lXdamage  -lXdmcp  -lXext  -lXfixes  -lXi  -lXinerama  -lxkbfile  -lXmu  -lXmuu  -lXpm  -lXrandr  -lXrender  -lXRes  -lXss  -lX11  -lXt  -lXtst  -lXv  -lXvMC  -lXxf86vm  -lxcb-xkb  -lxcb-icccm  -lxcb-image  -lxcb-keysyms  -lxcb-randr  -lxcb-render  -lxcb-render-util  -lxcb-shape  -lxcb-shm  -lxcb-sync  -lxcb-xfixes  -lxcb-xinerama  -lxcb  -lxcb-util  -lxcb-dri3  -luuid
-  LINK_PATH = -L/home/giuliano/.conan/data/glew/2.2.0/_/_/package/44741af961cbe3bae7bd261b66459e5b6dc65693/lib
-  OBJECT_DIR = source/CMakeFiles/vulkanApp.dir
-  POST_BUILD = :
-  PRE_LINK = :
-  TARGET_FILE = ../bin/vulkanApp
-  TARGET_PDB = vulkanApp.dbg
-
 
 #############################################
 # Utility command for edit_cache
@@ -127,7 +92,209 @@ build source/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
 build source/rebuild_cache: phony source/CMakeFiles/rebuild_cache.util
 
 # =============================================================================
+# Write statements declared in CMakeLists.txt:
+# /media/giuliano/Data/my_programs/C++/vulkan/source/CMakeLists.txt
+# =============================================================================
+
+# =============================================================================
+# Object build statements for EXECUTABLE target vulkanApp
+
+
+#############################################
+# Order-only phony target for vulkanApp
+
+build cmake_object_order_depends_target_vulkanApp: phony || shaders/GenerateShaderFrag shaders/GenerateShaderVert
+
+build source/renderer/CMakeFiles/vulkanApp.dir/renderer.cc.o: CXX_COMPILER__vulkanApp_Debug /media/giuliano/Data/my_programs/C++/vulkan/source/renderer/renderer.cc || cmake_object_order_depends_target_vulkanApp
+  DEFINES = -DHAS_FCHOWN -DHAS_STICKY_DIR_BIT -DSTB_TEXTEDIT_KEYTYPE=unsigned -D_BSD_SOURCE -D_DEFAULT_SOURCE -D_WIN32_WINNT=0x0601
+  DEP_FILE = source/renderer/CMakeFiles/vulkanApp.dir/renderer.cc.o.d
+  FLAGS = -g
+  INCLUDES = -isystem /home/giuliano/.conan/data/glew/2.2.0/_/_/package/fba319405f1ceb59f400f9efe782c115eaac6f93/include -isystem /home/giuliano/.conan/data/glfw/3.3.7/_/_/package/495b95917c60701459b219bfbd75ba817bd2ec98/include -isystem /usr/include/uuid -isystem /home/giuliano/.conan/data/vulkan-headers/1.3.211.0/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include -isystem /home/giuliano/.conan/data/vulkan-headers/1.3.211.0/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/res/vulkan/registry -isystem /home/giuliano/.conan/data/glm/0.9.9.8/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include -isystem /home/giuliano/.conan/data/stb/cci.20210910/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include -isystem /home/giuliano/.conan/data/tinyobjloader/1.0.6/_/_/package/79e112b065cbe2a4a0edce1a8d516321483d1705/include -isystem /home/giuliano/.conan/data/boost/1.79.0/_/_/package/0f05b2aa8e936c4174dd4bd90213479d2dc97f36/include
+  OBJECT_DIR = source/renderer/CMakeFiles/vulkanApp.dir
+  OBJECT_FILE_DIR = source/renderer/CMakeFiles/vulkanApp.dir
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target vulkanApp
+
+
+#############################################
+# Link the executable ../bin/vulkanApp
+
+build ../bin/vulkanApp: CXX_EXECUTABLE_LINKER__vulkanApp_Debug source/renderer/CMakeFiles/vulkanApp.dir/renderer.cc.o | /home/giuliano/.conan/data/glew/2.2.0/_/_/package/fba319405f1ceb59f400f9efe782c115eaac6f93/lib/libGLEWd.a /home/giuliano/.conan/data/glfw/3.3.7/_/_/package/495b95917c60701459b219bfbd75ba817bd2ec98/lib/libglfw3.a /home/giuliano/.conan/data/tinyobjloader/1.0.6/_/_/package/0d3bb5ed760e15c5a25aef7935f438ad21054b16/lib/libtinyobjloader.a || shaders/GenerateShaderFrag shaders/GenerateShaderVert
+  FLAGS = -g
+  LINK_LIBRARIES = -Wl,-rpath,/home/giuliano/.conan/data/glew/2.2.0/_/_/package/fba319405f1ceb59f400f9efe782c115eaac6f93/lib:/home/giuliano/.conan/data/boost/1.79.0/_/_/package/0f05b2aa8e936c4174dd4bd90213479d2dc97f36/lib  -lvulkan  /home/giuliano/.conan/data/glew/2.2.0/_/_/package/fba319405f1ceb59f400f9efe782c115eaac6f93/lib/libGLEWd.a  -lGLU  /home/giuliano/.conan/data/glfw/3.3.7/_/_/package/495b95917c60701459b219bfbd75ba817bd2ec98/lib/libglfw3.a  -lGL  -lm  -lpthread  -ldl  -lrt  -lX11-xcb  -lfontenc  -lICE  -lSM  -lXau  -lXaw7  -lXcomposite  -lXcursor  -lXdamage  -lXdmcp  -lXext  -lXfixes  -lXi  -lXinerama  -lxkbfile  -lXmu  -lXmuu  -lXpm  -lXrandr  -lXrender  -lXRes  -lXss  -lX11  -lXt  -lXtst  -lXv  -lXvMC  -lXxf86vm  -lxcb-xkb  -lxcb-icccm  -lxcb-image  -lxcb-keysyms  -lxcb-randr  -lxcb-render  -lxcb-render-util  -lxcb-shape  -lxcb-shm  -lxcb-sync  -lxcb-xfixes  -lxcb-xinerama  -lxcb  -lxcb-util  -lxcb-dri3  -luuid  /home/giuliano/.conan/data/tinyobjloader/1.0.6/_/_/package/0d3bb5ed760e15c5a25aef7935f438ad21054b16/lib/libtinyobjloader.a
+  LINK_PATH = -L/home/giuliano/.conan/data/glew/2.2.0/_/_/package/fba319405f1ceb59f400f9efe782c115eaac6f93/lib   -L/home/giuliano/.conan/data/boost/1.79.0/_/_/package/0f05b2aa8e936c4174dd4bd90213479d2dc97f36/lib
+  OBJECT_DIR = source/renderer/CMakeFiles/vulkanApp.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = ../bin/vulkanApp
+  TARGET_PDB = vulkanApp.dbg
+
+
+#############################################
+# Utility command for edit_cache
+
+build source/renderer/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /media/giuliano/Data/my_programs/C++/vulkan/build/source/renderer && /usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  DESC = No interactive CMake dialog available...
+  restat = 1
+
+build source/renderer/edit_cache: phony source/renderer/CMakeFiles/edit_cache.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build source/renderer/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /media/giuliano/Data/my_programs/C++/vulkan/build/source/renderer && /usr/bin/cmake --regenerate-during-build -S/media/giuliano/Data/my_programs/C++/vulkan -B/media/giuliano/Data/my_programs/C++/vulkan/build
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build source/renderer/rebuild_cache: phony source/renderer/CMakeFiles/rebuild_cache.util
+
+# =============================================================================
+# Write statements declared in CMakeLists.txt:
+# /media/giuliano/Data/my_programs/C++/vulkan/source/CMakeLists.txt
+# =============================================================================
+
+# =============================================================================
+# Object build statements for EXECUTABLE target vertexProcessing
+
+
+#############################################
+# Order-only phony target for vertexProcessing
+
+build cmake_object_order_depends_target_vertexProcessing: phony || source/processer/CMakeFiles/vertexProcessing.dir
+
+build source/processer/CMakeFiles/vertexProcessing.dir/main.cc.o: CXX_COMPILER__vertexProcessing_Debug /media/giuliano/Data/my_programs/C++/vulkan/source/processer/main.cc || cmake_object_order_depends_target_vertexProcessing
+  DEFINES = -DHAS_FCHOWN -DHAS_STICKY_DIR_BIT -D_BSD_SOURCE -D_DEFAULT_SOURCE -D_WIN32_WINNT=0x0601
+  DEP_FILE = source/processer/CMakeFiles/vertexProcessing.dir/main.cc.o.d
+  FLAGS = -g
+  INCLUDES = -isystem /home/giuliano/.conan/data/boost/1.79.0/_/_/package/0f05b2aa8e936c4174dd4bd90213479d2dc97f36/include -isystem /home/giuliano/.conan/data/glew/2.2.0/_/_/package/fba319405f1ceb59f400f9efe782c115eaac6f93/include -isystem /home/giuliano/.conan/data/glfw/3.3.7/_/_/package/495b95917c60701459b219bfbd75ba817bd2ec98/include -isystem /usr/include/uuid -isystem /home/giuliano/.conan/data/vulkan-headers/1.3.211.0/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include -isystem /home/giuliano/.conan/data/vulkan-headers/1.3.211.0/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/res/vulkan/registry -isystem /home/giuliano/.conan/data/glm/0.9.9.8/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include
+  OBJECT_DIR = source/processer/CMakeFiles/vertexProcessing.dir
+  OBJECT_FILE_DIR = source/processer/CMakeFiles/vertexProcessing.dir
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target vertexProcessing
+
+
+#############################################
+# Link the executable ../bin/vertexProcessing
+
+build ../bin/vertexProcessing: CXX_EXECUTABLE_LINKER__vertexProcessing_Debug source/processer/CMakeFiles/vertexProcessing.dir/main.cc.o | /home/giuliano/.conan/data/glew/2.2.0/_/_/package/fba319405f1ceb59f400f9efe782c115eaac6f93/lib/libGLEWd.a /home/giuliano/.conan/data/glfw/3.3.7/_/_/package/495b95917c60701459b219bfbd75ba817bd2ec98/lib/libglfw3.a
+  FLAGS = -g
+  LINK_LIBRARIES = -Wl,-rpath,/home/giuliano/.conan/data/boost/1.79.0/_/_/package/0f05b2aa8e936c4174dd4bd90213479d2dc97f36/lib:/home/giuliano/.conan/data/glew/2.2.0/_/_/package/fba319405f1ceb59f400f9efe782c115eaac6f93/lib  -lvulkan  /home/giuliano/.conan/data/glew/2.2.0/_/_/package/fba319405f1ceb59f400f9efe782c115eaac6f93/lib/libGLEWd.a  -lGLU  /home/giuliano/.conan/data/glfw/3.3.7/_/_/package/495b95917c60701459b219bfbd75ba817bd2ec98/lib/libglfw3.a  -lGL  -lm  -lpthread  -ldl  -lrt  -lX11-xcb  -lfontenc  -lICE  -lSM  -lXau  -lXaw7  -lXcomposite  -lXcursor  -lXdamage  -lXdmcp  -lXext  -lXfixes  -lXi  -lXinerama  -lxkbfile  -lXmu  -lXmuu  -lXpm  -lXrandr  -lXrender  -lXRes  -lXss  -lX11  -lXt  -lXtst  -lXv  -lXvMC  -lXxf86vm  -lxcb-xkb  -lxcb-icccm  -lxcb-image  -lxcb-keysyms  -lxcb-randr  -lxcb-render  -lxcb-render-util  -lxcb-shape  -lxcb-shm  -lxcb-sync  -lxcb-xfixes  -lxcb-xinerama  -lxcb  -lxcb-util  -lxcb-dri3  -luuid
+  LINK_PATH = -L/home/giuliano/.conan/data/boost/1.79.0/_/_/package/0f05b2aa8e936c4174dd4bd90213479d2dc97f36/lib   -L/home/giuliano/.conan/data/glew/2.2.0/_/_/package/fba319405f1ceb59f400f9efe782c115eaac6f93/lib
+  OBJECT_DIR = source/processer/CMakeFiles/vertexProcessing.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = ../bin/vertexProcessing
+  TARGET_PDB = vertexProcessing.dbg
+
+
+#############################################
+# Utility command for edit_cache
+
+build source/processer/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /media/giuliano/Data/my_programs/C++/vulkan/build/source/processer && /usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  DESC = No interactive CMake dialog available...
+  restat = 1
+
+build source/processer/edit_cache: phony source/processer/CMakeFiles/edit_cache.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build source/processer/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /media/giuliano/Data/my_programs/C++/vulkan/build/source/processer && /usr/bin/cmake --regenerate-during-build -S/media/giuliano/Data/my_programs/C++/vulkan -B/media/giuliano/Data/my_programs/C++/vulkan/build
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build source/processer/rebuild_cache: phony source/processer/CMakeFiles/rebuild_cache.util
+
+# =============================================================================
+# Write statements declared in CMakeLists.txt:
+# /media/giuliano/Data/my_programs/C++/vulkan/CMakeLists.txt
+# =============================================================================
+
+
+#############################################
+# Utility command for GenerateShaderFrag
+
+build shaders/GenerateShaderFrag: phony shaders/CMakeFiles/GenerateShaderFrag ../shaders/frag.spv
+
+
+#############################################
+# Utility command for GenerateShaderVert
+
+build shaders/GenerateShaderVert: phony shaders/CMakeFiles/GenerateShaderVert ../shaders/vert.spv
+
+
+#############################################
+# Utility command for edit_cache
+
+build shaders/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /media/giuliano/Data/my_programs/C++/vulkan/build/shaders && /usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  DESC = No interactive CMake dialog available...
+  restat = 1
+
+build shaders/edit_cache: phony shaders/CMakeFiles/edit_cache.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build shaders/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = cd /media/giuliano/Data/my_programs/C++/vulkan/build/shaders && /usr/bin/cmake --regenerate-during-build -S/media/giuliano/Data/my_programs/C++/vulkan -B/media/giuliano/Data/my_programs/C++/vulkan/build
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build shaders/rebuild_cache: phony shaders/CMakeFiles/rebuild_cache.util
+
+
+#############################################
+# Phony custom command for shaders/CMakeFiles/GenerateShaderFrag
+
+build shaders/CMakeFiles/GenerateShaderFrag | ${cmake_ninja_workdir}shaders/CMakeFiles/GenerateShaderFrag: phony ../shaders/frag.spv
+
+
+#############################################
+# Custom command for ../shaders/frag.spv
+
+build ../shaders/frag.spv | ${cmake_ninja_workdir}../shaders/frag.spv: CUSTOM_COMMAND ../shaders/shader.frag
+  COMMAND = cd /media/giuliano/Data/my_programs/C++/vulkan/build/shaders && touch /media/giuliano/Data/my_programs/C++/vulkan/shaders/frag.spv && glslc /media/giuliano/Data/my_programs/C++/vulkan/shaders/shader.frag -o /media/giuliano/Data/my_programs/C++/vulkan/shaders/frag.spv
+  DESC = Generating ../../shaders/frag.spv
+  restat = 1
+
+
+#############################################
+# Phony custom command for shaders/CMakeFiles/GenerateShaderVert
+
+build shaders/CMakeFiles/GenerateShaderVert | ${cmake_ninja_workdir}shaders/CMakeFiles/GenerateShaderVert: phony ../shaders/vert.spv
+
+
+#############################################
+# Custom command for ../shaders/vert.spv
+
+build ../shaders/vert.spv | ${cmake_ninja_workdir}../shaders/vert.spv: CUSTOM_COMMAND ../shaders/shader.frag
+  COMMAND = cd /media/giuliano/Data/my_programs/C++/vulkan/build/shaders && touch /media/giuliano/Data/my_programs/C++/vulkan/shaders/vert.spv && glslc /media/giuliano/Data/my_programs/C++/vulkan/shaders/shader.vert -o /media/giuliano/Data/my_programs/C++/vulkan/shaders/vert.spv
+  DESC = Generating ../../shaders/vert.spv
+  restat = 1
+
+# =============================================================================
 # Target aliases.
+
+build GenerateShaderFrag: phony shaders/GenerateShaderFrag
+
+build GenerateShaderVert: phony shaders/GenerateShaderVert
+
+build vertexProcessing: phony ../bin/vertexProcessing
 
 build vulkanApp: phony ../bin/vulkanApp
 
@@ -139,14 +306,35 @@ build vulkanApp: phony ../bin/vulkanApp
 #############################################
 # Folder: /media/giuliano/Data/my_programs/C++/vulkan/build
 
-build all: phony source/all
+build all: phony source/all shaders/all
+
+# =============================================================================
+
+#############################################
+# Folder: /media/giuliano/Data/my_programs/C++/vulkan/build/shaders
+
+build shaders/all: phony
 
 # =============================================================================
 
 #############################################
 # Folder: /media/giuliano/Data/my_programs/C++/vulkan/build/source
 
-build source/all: phony ../bin/vulkanApp
+build source/all: phony source/renderer/all source/processer/all
+
+# =============================================================================
+
+#############################################
+# Folder: /media/giuliano/Data/my_programs/C++/vulkan/build/source/processer
+
+build source/processer/all: phony ../bin/vertexProcessing
+
+# =============================================================================
+
+#############################################
+# Folder: /media/giuliano/Data/my_programs/C++/vulkan/build/source/renderer
+
+build source/renderer/all: phony ../bin/vulkanApp
 
 # =============================================================================
 # Built-in targets
@@ -155,14 +343,14 @@ build source/all: phony ../bin/vulkanApp
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja: RERUN_CMAKE | ../CMakeLists.txt ../conanfile.txt ../source/CMakeLists.txt /home/giuliano/.conan/data/glfw/3.3.7/_/_/package/08f4c711a76082a8ca8e8d4783b15f190b7d8e79/lib/cmake/conan-official-glfw-targets.cmake /usr/share/cmake-3.22/Modules/CMakeCInformation.cmake /usr/share/cmake-3.22/Modules/CMakeCXXInformation.cmake /usr/share/cmake-3.22/Modules/CMakeCommonLanguageInclude.cmake /usr/share/cmake-3.22/Modules/CMakeFindDependencyMacro.cmake /usr/share/cmake-3.22/Modules/CMakeGenericSystem.cmake /usr/share/cmake-3.22/Modules/CMakeInitializeConfigs.cmake /usr/share/cmake-3.22/Modules/CMakeLanguageInformation.cmake /usr/share/cmake-3.22/Modules/CMakeParseArguments.cmake /usr/share/cmake-3.22/Modules/CMakeSystemSpecificInformation.cmake /usr/share/cmake-3.22/Modules/CMakeSystemSpecificInitialize.cmake /usr/share/cmake-3.22/Modules/Compiler/CMakeCommonCompilerMacros.cmake /usr/share/cmake-3.22/Modules/Compiler/GNU-C.cmake /usr/share/cmake-3.22/Modules/Compiler/GNU-CXX.cmake /usr/share/cmake-3.22/Modules/Compiler/GNU.cmake /usr/share/cmake-3.22/Modules/FindPackageHandleStandardArgs.cmake /usr/share/cmake-3.22/Modules/FindPackageMessage.cmake /usr/share/cmake-3.22/Modules/Platform/Linux-GNU-C.cmake /usr/share/cmake-3.22/Modules/Platform/Linux-GNU-CXX.cmake /usr/share/cmake-3.22/Modules/Platform/Linux-GNU.cmake /usr/share/cmake-3.22/Modules/Platform/Linux.cmake /usr/share/cmake-3.22/Modules/Platform/UnixPaths.cmake CMakeCache.txt CMakeFiles/3.22.1/CMakeCCompiler.cmake CMakeFiles/3.22.1/CMakeCXXCompiler.cmake CMakeFiles/3.22.1/CMakeSystem.cmake FindGLEW.cmake FindVulkanHeaders.cmake Findglfw3.cmake Findglm.cmake Findglu.cmake Findopengl_system.cmake Findxorg.cmake conan.cmake conanbuildinfo.cmake
+build build.ninja: RERUN_CMAKE | ../CMakeLists.txt ../conanfile.txt ../shaders/CMakeLists.txt ../source/CMakeLists.txt ../source/processer/CMakeLists.txt ../source/renderer/CMakeLists.txt /home/giuliano/.conan/data/bzip2/1.0.8/_/_/package/ad18e1e856ff78d73ad6f3c9a214f85abf2d0550/lib/cmake/conan-official-bzip2-variables.cmake /home/giuliano/.conan/data/glfw/3.3.7/_/_/package/495b95917c60701459b219bfbd75ba817bd2ec98/lib/cmake/conan-official-glfw-targets.cmake /home/giuliano/.conan/data/tinyobjloader/1.0.6/_/_/package/79e112b065cbe2a4a0edce1a8d516321483d1705/lib/cmake/conan-official-tinyobjloader-targets.cmake /usr/share/cmake-3.22/Modules/CMakeCInformation.cmake /usr/share/cmake-3.22/Modules/CMakeCXXInformation.cmake /usr/share/cmake-3.22/Modules/CMakeCommonLanguageInclude.cmake /usr/share/cmake-3.22/Modules/CMakeFindDependencyMacro.cmake /usr/share/cmake-3.22/Modules/CMakeGenericSystem.cmake /usr/share/cmake-3.22/Modules/CMakeInitializeConfigs.cmake /usr/share/cmake-3.22/Modules/CMakeLanguageInformation.cmake /usr/share/cmake-3.22/Modules/CMakeParseArguments.cmake /usr/share/cmake-3.22/Modules/CMakeSystemSpecificInformation.cmake /usr/share/cmake-3.22/Modules/CMakeSystemSpecificInitialize.cmake /usr/share/cmake-3.22/Modules/Compiler/CMakeCommonCompilerMacros.cmake /usr/share/cmake-3.22/Modules/Compiler/GNU-C.cmake /usr/share/cmake-3.22/Modules/Compiler/GNU-CXX.cmake /usr/share/cmake-3.22/Modules/Compiler/GNU.cmake /usr/share/cmake-3.22/Modules/FindPackageHandleStandardArgs.cmake /usr/share/cmake-3.22/Modules/FindPackageMessage.cmake /usr/share/cmake-3.22/Modules/Platform/Linux-GNU-C.cmake /usr/share/cmake-3.22/Modules/Platform/Linux-GNU-CXX.cmake /usr/share/cmake-3.22/Modules/Platform/Linux-GNU.cmake /usr/share/cmake-3.22/Modules/Platform/Linux.cmake /usr/share/cmake-3.22/Modules/Platform/UnixPaths.cmake CMakeCache.txt CMakeFiles/3.22.1/CMakeCCompiler.cmake CMakeFiles/3.22.1/CMakeCXXCompiler.cmake CMakeFiles/3.22.1/CMakeSystem.cmake FindBZip2.cmake FindBoost.cmake FindGLEW.cmake FindVulkanHeaders.cmake FindZLIB.cmake Findglfw3.cmake Findglm.cmake Findglu.cmake Findlibbacktrace.cmake Findopengl_system.cmake Findstb.cmake Findtinyobjloader.cmake Findvolk.cmake Findxorg.cmake conan.cmake conanbuildinfo.cmake
   pool = console
 
 
 #############################################
 # A missing CMake input file is not an error.
 
-build ../CMakeLists.txt ../conanfile.txt ../source/CMakeLists.txt /home/giuliano/.conan/data/glfw/3.3.7/_/_/package/08f4c711a76082a8ca8e8d4783b15f190b7d8e79/lib/cmake/conan-official-glfw-targets.cmake /usr/share/cmake-3.22/Modules/CMakeCInformation.cmake /usr/share/cmake-3.22/Modules/CMakeCXXInformation.cmake /usr/share/cmake-3.22/Modules/CMakeCommonLanguageInclude.cmake /usr/share/cmake-3.22/Modules/CMakeFindDependencyMacro.cmake /usr/share/cmake-3.22/Modules/CMakeGenericSystem.cmake /usr/share/cmake-3.22/Modules/CMakeInitializeConfigs.cmake /usr/share/cmake-3.22/Modules/CMakeLanguageInformation.cmake /usr/share/cmake-3.22/Modules/CMakeParseArguments.cmake /usr/share/cmake-3.22/Modules/CMakeSystemSpecificInformation.cmake /usr/share/cmake-3.22/Modules/CMakeSystemSpecificInitialize.cmake /usr/share/cmake-3.22/Modules/Compiler/CMakeCommonCompilerMacros.cmake /usr/share/cmake-3.22/Modules/Compiler/GNU-C.cmake /usr/share/cmake-3.22/Modules/Compiler/GNU-CXX.cmake /usr/share/cmake-3.22/Modules/Compiler/GNU.cmake /usr/share/cmake-3.22/Modules/FindPackageHandleStandardArgs.cmake /usr/share/cmake-3.22/Modules/FindPackageMessage.cmake /usr/share/cmake-3.22/Modules/Platform/Linux-GNU-C.cmake /usr/share/cmake-3.22/Modules/Platform/Linux-GNU-CXX.cmake /usr/share/cmake-3.22/Modules/Platform/Linux-GNU.cmake /usr/share/cmake-3.22/Modules/Platform/Linux.cmake /usr/share/cmake-3.22/Modules/Platform/UnixPaths.cmake CMakeCache.txt CMakeFiles/3.22.1/CMakeCCompiler.cmake CMakeFiles/3.22.1/CMakeCXXCompiler.cmake CMakeFiles/3.22.1/CMakeSystem.cmake FindGLEW.cmake FindVulkanHeaders.cmake Findglfw3.cmake Findglm.cmake Findglu.cmake Findopengl_system.cmake Findxorg.cmake conan.cmake conanbuildinfo.cmake: phony
+build ../CMakeLists.txt ../conanfile.txt ../shaders/CMakeLists.txt ../source/CMakeLists.txt ../source/processer/CMakeLists.txt ../source/renderer/CMakeLists.txt /home/giuliano/.conan/data/bzip2/1.0.8/_/_/package/ad18e1e856ff78d73ad6f3c9a214f85abf2d0550/lib/cmake/conan-official-bzip2-variables.cmake /home/giuliano/.conan/data/glfw/3.3.7/_/_/package/495b95917c60701459b219bfbd75ba817bd2ec98/lib/cmake/conan-official-glfw-targets.cmake /home/giuliano/.conan/data/tinyobjloader/1.0.6/_/_/package/79e112b065cbe2a4a0edce1a8d516321483d1705/lib/cmake/conan-official-tinyobjloader-targets.cmake /usr/share/cmake-3.22/Modules/CMakeCInformation.cmake /usr/share/cmake-3.22/Modules/CMakeCXXInformation.cmake /usr/share/cmake-3.22/Modules/CMakeCommonLanguageInclude.cmake /usr/share/cmake-3.22/Modules/CMakeFindDependencyMacro.cmake /usr/share/cmake-3.22/Modules/CMakeGenericSystem.cmake /usr/share/cmake-3.22/Modules/CMakeInitializeConfigs.cmake /usr/share/cmake-3.22/Modules/CMakeLanguageInformation.cmake /usr/share/cmake-3.22/Modules/CMakeParseArguments.cmake /usr/share/cmake-3.22/Modules/CMakeSystemSpecificInformation.cmake /usr/share/cmake-3.22/Modules/CMakeSystemSpecificInitialize.cmake /usr/share/cmake-3.22/Modules/Compiler/CMakeCommonCompilerMacros.cmake /usr/share/cmake-3.22/Modules/Compiler/GNU-C.cmake /usr/share/cmake-3.22/Modules/Compiler/GNU-CXX.cmake /usr/share/cmake-3.22/Modules/Compiler/GNU.cmake /usr/share/cmake-3.22/Modules/FindPackageHandleStandardArgs.cmake /usr/share/cmake-3.22/Modules/FindPackageMessage.cmake /usr/share/cmake-3.22/Modules/Platform/Linux-GNU-C.cmake /usr/share/cmake-3.22/Modules/Platform/Linux-GNU-CXX.cmake /usr/share/cmake-3.22/Modules/Platform/Linux-GNU.cmake /usr/share/cmake-3.22/Modules/Platform/Linux.cmake /usr/share/cmake-3.22/Modules/Platform/UnixPaths.cmake CMakeCache.txt CMakeFiles/3.22.1/CMakeCCompiler.cmake CMakeFiles/3.22.1/CMakeCXXCompiler.cmake CMakeFiles/3.22.1/CMakeSystem.cmake FindBZip2.cmake FindBoost.cmake FindGLEW.cmake FindVulkanHeaders.cmake FindZLIB.cmake Findglfw3.cmake Findglm.cmake Findglu.cmake Findlibbacktrace.cmake Findopengl_system.cmake Findstb.cmake Findtinyobjloader.cmake Findvolk.cmake Findxorg.cmake conan.cmake conanbuildinfo.cmake: phony
 
 
 #############################################

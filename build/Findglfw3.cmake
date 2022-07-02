@@ -80,9 +80,9 @@ find_package_handle_standard_args(glfw3 REQUIRED_VARS
 mark_as_advanced(glfw3_FOUND glfw3_VERSION)
 
 
-set(glfw_INCLUDE_DIRS "/home/giuliano/.conan/data/glfw/3.3.7/_/_/package/08f4c711a76082a8ca8e8d4783b15f190b7d8e79/include")
-set(glfw_INCLUDE_DIR "/home/giuliano/.conan/data/glfw/3.3.7/_/_/package/08f4c711a76082a8ca8e8d4783b15f190b7d8e79/include")
-set(glfw_INCLUDES "/home/giuliano/.conan/data/glfw/3.3.7/_/_/package/08f4c711a76082a8ca8e8d4783b15f190b7d8e79/include")
+set(glfw_INCLUDE_DIRS "/home/giuliano/.conan/data/glfw/3.3.7/_/_/package/495b95917c60701459b219bfbd75ba817bd2ec98/include")
+set(glfw_INCLUDE_DIR "/home/giuliano/.conan/data/glfw/3.3.7/_/_/package/495b95917c60701459b219bfbd75ba817bd2ec98/include")
+set(glfw_INCLUDES "/home/giuliano/.conan/data/glfw/3.3.7/_/_/package/495b95917c60701459b219bfbd75ba817bd2ec98/include")
 set(glfw_RES_DIRS )
 set(glfw_DEFINITIONS )
 set(glfw_LINKER_FLAGS_LIST
@@ -101,7 +101,7 @@ set(glfw_SYSTEM_LIBS m pthread dl rt)
 set(glfw_FRAMEWORK_DIRS )
 set(glfw_FRAMEWORKS )
 set(glfw_FRAMEWORKS_FOUND "") # Will be filled later
-set(glfw_BUILD_MODULES_PATHS "/home/giuliano/.conan/data/glfw/3.3.7/_/_/package/08f4c711a76082a8ca8e8d4783b15f190b7d8e79/lib/cmake/conan-official-glfw-targets.cmake")
+set(glfw_BUILD_MODULES_PATHS "/home/giuliano/.conan/data/glfw/3.3.7/_/_/package/495b95917c60701459b219bfbd75ba817bd2ec98/lib/cmake/conan-official-glfw-targets.cmake")
 
 conan_find_apple_frameworks(glfw_FRAMEWORKS_FOUND "${glfw_FRAMEWORKS}" "${glfw_FRAMEWORK_DIRS}")
 
@@ -118,7 +118,7 @@ mark_as_advanced(glfw_INCLUDE_DIRS
 
 # Find the real .lib/.a and add them to glfw_LIBS and glfw_LIBRARY_LIST
 set(glfw_LIBRARY_LIST glfw3)
-set(glfw_LIB_DIRS "/home/giuliano/.conan/data/glfw/3.3.7/_/_/package/08f4c711a76082a8ca8e8d4783b15f190b7d8e79/lib")
+set(glfw_LIB_DIRS "/home/giuliano/.conan/data/glfw/3.3.7/_/_/package/495b95917c60701459b219bfbd75ba817bd2ec98/lib")
 
 # Gather all the libraries that should be linked to the targets (do not touch existing variables):
 set(_glfw_DEPENDENCIES "${glfw_FRAMEWORKS_FOUND} ${glfw_SYSTEM_LIBS} opengl::opengl;xorg::xorg")
@@ -147,8 +147,8 @@ endforeach()
 set(glfw_LIBRARIES_TARGETS "${glfw_LIBRARIES_TARGETS};opengl::opengl;xorg::xorg")
 set(glfw_LIBRARIES "${glfw_LIBRARIES};opengl::opengl;xorg::xorg")
 
-set(CMAKE_MODULE_PATH "/home/giuliano/.conan/data/glfw/3.3.7/_/_/package/08f4c711a76082a8ca8e8d4783b15f190b7d8e79/" ${CMAKE_MODULE_PATH})
-set(CMAKE_PREFIX_PATH "/home/giuliano/.conan/data/glfw/3.3.7/_/_/package/08f4c711a76082a8ca8e8d4783b15f190b7d8e79/" ${CMAKE_PREFIX_PATH})
+set(CMAKE_MODULE_PATH "/home/giuliano/.conan/data/glfw/3.3.7/_/_/package/495b95917c60701459b219bfbd75ba817bd2ec98/" ${CMAKE_MODULE_PATH})
+set(CMAKE_PREFIX_PATH "/home/giuliano/.conan/data/glfw/3.3.7/_/_/package/495b95917c60701459b219bfbd75ba817bd2ec98/" ${CMAKE_PREFIX_PATH})
 
 if(NOT ${CMAKE_VERSION} VERSION_LESS "3.0")
     # Target approach
