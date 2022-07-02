@@ -3,8 +3,7 @@
 #include "volk.h"
 #include "vulkan/vulkan.h"
 
-#define GLFW_INCLUDE_VULKAN
-#include <GLFW/glfw3.h>
+#include <glfw_support.h>
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
@@ -41,8 +40,7 @@
 #include <boost/interprocess/mapped_region.hpp>
 namespace bi = boost::interprocess;
 
-const uint32_t WIDTH = 800;
-const uint32_t HEIGHT = 600;
+
 
 const std::string MODEL_PATH = "models/viking_room.obj";
 const std::string TEXTURE_PATH = "textures/viking_room.png";
@@ -302,10 +300,10 @@ struct Refresh {
     int refreshIndex = 0;
 };
 
-class HelloTriangleApplication {
+class HelloTriangleApplication : public GlfwSupport{
 public:
     void run() {
-        initWindow();
+        mInitWindow();
         initVulkan();
         mainLoop();
         cleanup();
@@ -327,8 +325,6 @@ private:
     VkDeviceMemory stagingVertexBufferMemory;
     VkBuffer stagingIndexBuffer;
     VkDeviceMemory stagingIndexBufferMemory;
-
-    GLFWwindow* window;
 
     VkInstance instance;
     VkDebugUtilsMessengerEXT debugMessenger;
@@ -385,25 +381,17 @@ private:
 
     bool framebufferResized = false;
 
-    void initWindow() {
-        glfwInit();
-
-        glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-
-        window = glfwCreateWindow(WIDTH, HEIGHT, "Vulkan", nullptr, nullptr);
-        glfwSetWindowUserPointer(window, this);
-        glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
-    }
-
     static void framebufferResizeCallback(GLFWwindow* window, int width, int height) {
         auto app = reinterpret_cast<HelloTriangleApplication*>(glfwGetWindowUserPointer(window));
         app->framebufferResized = true;
     }
 
     void initVulkan() {
+        pFramebufferResizeCallback = &framebufferResizeCallback;
+
         createInstance();
         setupDebugMessenger();
-        createSurface();
+        mCreateSurface(instance, surface);
         pickPhysicalDevice();
         createLogicalDevice();
         createSwapChain();
@@ -428,8 +416,9 @@ private:
     }
 
     void mainLoop() {
-        while (!glfwWindowShouldClose(window)) {
-            glfwPollEvents();
+        while (!mWindowShouldClose())
+        {
+            mPoolWindowEvents();
             drawFrame();
         }
 
@@ -500,18 +489,13 @@ private:
         vkDestroySurfaceKHR(instance, surface, nullptr);
         vkDestroyInstance(instance, nullptr);
 
-        glfwDestroyWindow(window);
+        mDestroyWindow();
 
-        glfwTerminate();
     }
 
-    void recreateSwapChain() {
-        int width = 0, height = 0;
-        glfwGetFramebufferSize(window, &width, &height);
-        while (width == 0 || height == 0) {
-            glfwGetFramebufferSize(window, &width, &height);
-            glfwWaitEvents();
-        }
+    void recreateSwapChain() 
+    {
+        mUpdateFramebufferSize();
 
         vkDeviceWaitIdle(device);
 
@@ -584,12 +568,6 @@ private:
 
         if (CreateDebugUtilsMessengerEXT(instance, &createInfo, nullptr, &debugMessenger) != VK_SUCCESS) {
             throw std::runtime_error("failed to set up debug messenger!");
-        }
-    }
-
-    void createSurface() {
-        if (glfwCreateWindowSurface(instance, window, nullptr, &surface) != VK_SUCCESS) {
-            throw std::runtime_error("failed to create window surface!");
         }
     }
 
@@ -1766,7 +1744,7 @@ private:
             return capabilities.currentExtent;
         } else {
             int width, height;
-            glfwGetFramebufferSize(window, &width, &height);
+            mGetFramebufferSize(width, height);
 
             VkExtent2D actualExtent = {
                 static_cast<uint32_t>(width),
@@ -1870,11 +1848,9 @@ private:
     }
 
     std::vector<const char*> getRequiredExtensions() {
-        uint32_t glfwExtensionCount = 0;
-        const char** glfwExtensions;
-        glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+        std::vector<const char*> extensions;
 
-        std::vector<const char*> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
+        mGetWindowRequiredExtensions(extensions);
 
         if (enableValidationLayers) {
             extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);

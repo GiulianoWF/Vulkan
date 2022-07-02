@@ -2,7 +2,7 @@
 add_executable(vulkanApp renderer.cc)
 # add_library(position_info_channel_factory STATIC source/position_info_channel_factory.cc)
 # target_include_directories(position_info_channel_factory INTERFACE include)
-# target_include_directories(position_info_channel_factory PRIVATE AFTER include private_include)
+target_include_directories(vulkanApp PRIVATE AFTER include)
 # target_link_libraries(position_info_channel_factory PRIVATE position_info_channel)
 
 # target_include_directories(activity_manager PUBLIC include)
