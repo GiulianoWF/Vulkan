@@ -1,13 +1,15 @@
 #pragma once
 
+#include "swap_chain_processer.h"
 class TextureProcesser
 {
     VkDevice * mDevice;
     VkPhysicalDevice * mPhysicalDevice;
 
-    std::vector<VkImageView> * mSwapChainImageViews;
-    std::vector<VkImage> * mSwapChainImages;
-    VkFormat * mSwapChainImageFormat;
+    SwapChainProcesser * mSwapChainProcesser;
+    // std::vector<VkImageView> * mSwapChainImageViews;
+    // std::vector<VkImage> * mSwapChainImages;
+    // VkFormat * mSwapChainImageFormat;
 
     VkImage textureImage;
     VkDeviceMemory textureImageMemory;
@@ -25,17 +27,21 @@ class TextureProcesser
     public:
         TextureProcesser(   VkDevice * device,
                             VkPhysicalDevice * physicalDevice,
-                            std::vector<VkImageView> * swapChainImageViews,
-                            std::vector<VkImage> * swapChainImages,
-                            VkFormat * swapChainImageFormat,
+                            SwapChainProcesser * swapChainProcesser,
+                            // std::vector<VkImageView> * swapChainImageViews,
+                            // std::vector<VkImage> * swapChainImages,
+                            // VkFormat * swapChainImageFormat,
                             VkCommandPool * commandPool,
                             VkQueue * graphicsQueue)
         {
             mDevice = device;
             mPhysicalDevice = physicalDevice;
-            mSwapChainImageViews = swapChainImageViews;
-            mSwapChainImages = swapChainImages;
-            mSwapChainImageFormat = swapChainImageFormat;
+
+            mSwapChainProcesser = swapChainProcesser;
+            // mSwapChainImageViews = swapChainImageViews;
+            // mSwapChainImages = swapChainImages;
+            // mSwapChainImageFormat = swapChainImageFormat;
+
             mCommandPool = commandPool;
             mGraphicsQueue = graphicsQueue;
 
@@ -91,10 +97,10 @@ class TextureProcesser
         }
 
         void createImageViews() {
-            mSwapChainImageViews->resize(mSwapChainImages->size());
+            mSwapChainProcesser->mSwapChainImageViews.resize(mSwapChainProcesser->mSwapChainImages.size());
 
-            for (uint32_t i = 0; i < mSwapChainImages->size(); i++) {
-                (*mSwapChainImageViews)[i] = createImageView((*mSwapChainImages)[i], *mSwapChainImageFormat, VK_IMAGE_ASPECT_COLOR_BIT);
+            for (uint32_t i = 0; i < mSwapChainProcesser->mSwapChainImages.size(); i++) {
+                mSwapChainProcesser->mSwapChainImageViews[i] = createImageView(mSwapChainProcesser->mSwapChainImages[i], mSwapChainProcesser->mSwapChainImageFormat, VK_IMAGE_ASPECT_COLOR_BIT);
             }
         }
 
