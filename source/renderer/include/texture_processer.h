@@ -3,13 +3,12 @@
 #include "swap_chain_processer.h"
 class TextureProcesser
 {
+    std::string mTexturePath;
+
     VkDevice * mDevice;
     VkPhysicalDevice * mPhysicalDevice;
 
     SwapChainProcesser * mSwapChainProcesser;
-    // std::vector<VkImageView> * mSwapChainImageViews;
-    // std::vector<VkImage> * mSwapChainImages;
-    // VkFormat * mSwapChainImageFormat;
 
     VkImage textureImage;
     VkDeviceMemory textureImageMemory;
@@ -49,6 +48,11 @@ class TextureProcesser
             mTextureImageMemory = &textureImageMemory;
             mTextureImageView = &textureImageView;
             mTextureSampler = &textureSampler;
+        }
+
+        void SetTexturePath(std::string const& texturePath)
+        {
+            mTexturePath = texturePath;
         }
 
         void cleanup()
@@ -106,7 +110,7 @@ class TextureProcesser
 
         void createTextureImage() {
             int texWidth, texHeight, texChannels;
-            stbi_uc* pixels = stbi_load(TEXTURE_PATH.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+            stbi_uc* pixels = stbi_load(mTexturePath.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
             VkDeviceSize imageSize = texWidth * texHeight * 4;
 
             if (!pixels) {

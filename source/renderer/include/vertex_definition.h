@@ -1,8 +1,20 @@
 #pragma once
+
+#define VK_NO_PROTOTYPES
+#include "vulkan/vulkan.h"
+
+#define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/hash.hpp>
+
+
 struct Vertex {
     glm::vec3 pos;
     glm::vec3 color;
-    // glm::vec2 texCoord;
+    glm::vec2 texCoord;
 
     static VkVertexInputBindingDescription getBindingDescription() {
         VkVertexInputBindingDescription bindingDescription{};
@@ -26,15 +38,15 @@ struct Vertex {
         attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
         attributeDescriptions[1].offset = offsetof(Vertex, color);
 
-        // attributeDescriptions[2].binding = 0;
-        // attributeDescriptions[2].location = 2;
-        // attributeDescriptions[2].format = VK_FORMAT_R32G32_SFLOAT;
-        // attributeDescriptions[2].offset = offsetof(Vertex, texCoord);
+        attributeDescriptions[2].binding = 0;
+        attributeDescriptions[2].location = 2;
+        attributeDescriptions[2].format = VK_FORMAT_R32G32_SFLOAT;
+        attributeDescriptions[2].offset = offsetof(Vertex, texCoord);
 
         return attributeDescriptions;
     }
 
     bool operator==(const Vertex& other) const {
-        return pos == other.pos && color == other.color;// && texCoord == other.texCoord;
+        return pos == other.pos && color == other.color && texCoord == other.texCoord;
     }
 };

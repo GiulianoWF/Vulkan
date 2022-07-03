@@ -3,10 +3,12 @@
 #include <boost/interprocess/mapped_region.hpp>
 namespace bi = boost::interprocess;
 
-struct Refresh {
+struct LinkControl {
     boost::interprocess::interprocess_mutex mutex;
     int refreshVertex = 0;
     int refreshIndex = 0;
+    size_t mVertexDataSize = 0;
+    size_t mIndicesDataSize = 0;
 };
 
 enum struct RefreshEnum : uint8_t
@@ -23,7 +25,7 @@ class InterprocessSupport
         boost::interprocess::mapped_region mMappedRegionBufferIndex;
         boost::interprocess::shared_memory_object mSharedMemoryObjectRefresh;
         boost::interprocess::mapped_region mMappedRegionBufferRefresh;
-        Refresh * mBufferRefreshInfo = nullptr;
+        LinkControl * mLinkControlInfo = nullptr;
         uint8_t mUpdatePending = 0;
 
         uint64_t mVertexDataSize = 0;
@@ -37,13 +39,12 @@ class InterprocessSupport
         void mRefreshUpdatePendingState() 
         {
             mUpdatePending = 0;
-            if(this->mBufferRefreshInfo->refreshIndex)
+            if(this->mLinkControlInfo->refreshIndex)
             {
                 mUpdatePending |= (uint8_t)RefreshEnum::UPDATE_INDEX;
             }
-            if(this->mBufferRefreshInfo->refreshVertex)
+            if(this->mLinkControlInfo->refreshVertex)
             {
-                std::cout << "Must update Vertex" << std::endl;
                 mUpdatePending |= (uint8_t)RefreshEnum::UPDATE_VERTEX;
             }
         }
@@ -51,45 +52,32 @@ class InterprocessSupport
         void mUpdateStagingBuffersInfo(uint64_t const vertexDataSize, void * vertexStagingData, uint64_t const indicesDataSize, void * indicesStagingData)
         {
             mVertexDataSize = vertexDataSize;
+            if (nullptr != this->mLinkControlInfo)
+            {
+                this->mLinkControlInfo->mVertexDataSize = vertexDataSize;
+            }
             mVertexStagingData = vertexStagingData;
+
             mIndicesDataSize = indicesDataSize;
+            if (nullptr != this->mLinkControlInfo)
+            {
+                this->mLinkControlInfo->mIndicesDataSize = indicesDataSize;
+            }
             mIndicesStagingData = indicesStagingData;
         }
 
         void mUpdateStagingVertexBufferInfo(uint64_t const vertexDataSize, void * vertexStagingData)
         {
             mVertexDataSize = vertexDataSize;
+            if (nullptr != this->mLinkControlInfo)
+            {
+                this->mLinkControlInfo->mVertexDataSize = vertexDataSize;
+            }
             mVertexStagingData = vertexStagingData;
         }
 
         void mCreateInterprocessLinks(uint64_t const vertexDataSize, void * vertexStagingData, uint64_t const indicesDataSize, void * indicesStagingData)
         {
-            //======================================================================================
-            //                          Shared Memory Vertex
-            //======================================================================================
-            // VkDeviceSize dataSize = sizeof(vertices[0]) * vertices.size();
-            this->mSharedMemoryObjectBuffer = bi::shared_memory_object(bi::open_or_create
-                                                                    ,"VertexBuffer"
-                                                                    ,bi::read_write );
-            this->mSharedMemoryObjectBuffer.truncate(vertexDataSize);
-            this->mMappedRegionBuffer = bi::mapped_region(this->mSharedMemoryObjectBuffer, bi::read_write);
-
-            memcpy(this->mMappedRegionBuffer.get_address(), vertexStagingData, (size_t) vertexDataSize);
-            // std::cout << "Verticies size " << vertexDataSize << std::endl;
-
-            //======================================================================================
-            //                          Shared Memory Index
-            //======================================================================================
-            // VkDeviceSize indexdataSize = sizeof(indices[0]) * indices.size();
-            this->mSharedMemoryObjectIndex = bi::shared_memory_object(bi::open_or_create
-                                                                    ,"IndexBuffer"
-                                                                    ,bi::read_write
-                                                                    );
-            this->mSharedMemoryObjectIndex.truncate(indicesDataSize);
-            this->mMappedRegionBufferIndex = bi::mapped_region(this->mSharedMemoryObjectIndex, bi::read_write);
-
-            memcpy(this->mMappedRegionBufferIndex.get_address(), indicesStagingData, (size_t) indicesDataSize);
-
             //======================================================================================
             //                          Shared Memory Refresh
             //======================================================================================
@@ -97,25 +85,60 @@ class InterprocessSupport
                                                                     ,"RefreshBuffer"
                                                                     ,bi::read_write
                                                                     );
-            this->mSharedMemoryObjectRefresh.truncate(sizeof(Refresh));
+            this->mSharedMemoryObjectRefresh.truncate(sizeof(LinkControl));
             this->mMappedRegionBufferRefresh = bi::mapped_region(this->mSharedMemoryObjectRefresh, bi::read_write);
 
-            this->mBufferRefreshInfo = new (this->mMappedRegionBufferRefresh.get_address()) Refresh;
-            new (&this->mBufferRefreshInfo->mutex) boost::interprocess::interprocess_mutex{};
+            this->mLinkControlInfo = new (this->mMappedRegionBufferRefresh.get_address()) LinkControl;
+            new (&this->mLinkControlInfo->mutex) boost::interprocess::interprocess_mutex{};
 
-            memcpy(this->mMappedRegionBufferRefresh.get_address(), &this->mBufferRefreshInfo, (size_t) sizeof(Refresh));
+            memcpy(this->mMappedRegionBufferRefresh.get_address(), &this->mLinkControlInfo, (size_t) sizeof(LinkControl));
 
             try{
-                if (this->mBufferRefreshInfo->mutex.try_lock())
+                if (this->mLinkControlInfo->mutex.try_lock())
                 {
                     std::cout << "Could not lock" << std::endl;
                 }
-                this->mBufferRefreshInfo->mutex.unlock();
+                this->mLinkControlInfo->mutex.unlock();
             }
             catch(boost::interprocess::lock_exception& e)
             {
                 std::cout << e.what();
-                new (&this->mBufferRefreshInfo->mutex) boost::interprocess::interprocess_mutex{};
+                new (&this->mLinkControlInfo->mutex) boost::interprocess::interprocess_mutex{};
+            }
+
+            //======================================================================================
+            //                          Shared Memory Vertex
+            //======================================================================================
+            this->mSharedMemoryObjectBuffer = bi::shared_memory_object(bi::open_or_create
+                                                                    ,"VertexBuffer"
+                                                                    ,bi::read_write );
+
+            this->mSharedMemoryObjectBuffer.truncate(vertexDataSize);
+            this->mLinkControlInfo->mVertexDataSize = vertexDataSize;
+
+            this->mMappedRegionBuffer = bi::mapped_region(this->mSharedMemoryObjectBuffer, bi::read_write);
+
+            if(nullptr != vertexStagingData && nullptr != this->mMappedRegionBuffer.get_address())
+            {
+                memcpy(this->mMappedRegionBuffer.get_address(), vertexStagingData, (size_t) vertexDataSize);            // std::cout << "Verticies size " << vertexDataSize << std::endl;
+            }
+
+            //======================================================================================
+            //                          Shared Memory Index
+            //======================================================================================
+            this->mSharedMemoryObjectIndex = bi::shared_memory_object(bi::open_or_create
+                                                                    ,"IndexBuffer"
+                                                                    ,bi::read_write
+                                                                    );
+
+            this->mSharedMemoryObjectIndex.truncate(indicesDataSize);
+            this->mLinkControlInfo->mIndicesDataSize = indicesDataSize;
+
+            this->mMappedRegionBufferIndex = bi::mapped_region(this->mSharedMemoryObjectIndex, bi::read_write);
+
+            if(nullptr != indicesStagingData && nullptr != this->mMappedRegionBufferIndex.get_address())
+            {
+                memcpy(this->mMappedRegionBufferIndex.get_address(), indicesStagingData, (size_t) indicesDataSize);
             }
         }
 
@@ -141,7 +164,7 @@ class InterprocessSupport
                     {
                         return lockAquired;
                     };
-                } lock (&this->mBufferRefreshInfo->mutex);
+                } lock (&this->mLinkControlInfo->mutex);
                 
                 if(lock.getState())
                 {
@@ -151,13 +174,13 @@ class InterprocessSupport
                     if(mUpdatePending & (uint8_t)RefreshEnum::UPDATE_INDEX)
                     {
                         mUpdateIndexBuffer();
-                        this->mBufferRefreshInfo->refreshIndex = 0;
+                        this->mLinkControlInfo->refreshIndex = 0;
                     }
 
                     if(mUpdatePending & (uint8_t)RefreshEnum::UPDATE_VERTEX)
                     {
                         mUpdateVertexBuffer();
-                        this->mBufferRefreshInfo->refreshVertex = 0;
+                        this->mLinkControlInfo->refreshVertex = 0;
                     }
                 }
                 else

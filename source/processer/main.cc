@@ -1,6 +1,5 @@
-#include <boost/interprocess/sync/interprocess_mutex.hpp>
-#include <boost/interprocess/shared_memory_object.hpp>
-#include <boost/interprocess/mapped_region.hpp>
+#include "interprocess_support.h"
+#include "../../renderer/include/vertex_definition.h"
 
 #include <iostream>
 #include <chrono>
@@ -14,56 +13,38 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/hash.hpp>
 
-namespace bi = boost::interprocess;
-struct Vertex {
-    glm::vec3 pos;
-    glm::vec3 color;
-    glm::vec2 texCoord;
-};
+void PrintVertexPos(Vertex * v)
+{
+    std::cout << "{ " << v->pos.x << " , " << v->pos.y << " , " << v->pos.z << " } ";
+}
 
-struct Refresh {
-    boost::interprocess::interprocess_mutex mutex;
-    int refreshVertex = 0;
-    int refreshIndex = 0;
-};
+void PrintVertexTexturePos(Vertex * v)
+{
+    std::cout <<  "{ " << v->texCoord.x << " , " << v->texCoord.y << " }"<< std::endl;
+}
 
 int main()
 {
-    std::vector<Vertex> vertices;
-    vertices.reserve(114112);
+    InterprocessSupportMaster link;
+    link.mCreateInterprocessLinks();
 
-    boost::interprocess::shared_memory_object mSharedMemoryObject;
-    boost::interprocess::mapped_region mMappedRegion;
+    void * data = link.mGetVertexDataPointer();
+    Vertex * vertices_ptr = static_cast<Vertex *>(data);
 
-    mSharedMemoryObject = bi::shared_memory_object(bi::open_only
-                                                    ,"VertexBuffer"
-                                                    ,bi::read_write
-                                                    );
+    int64_t size = link.mGetVertexDataSize();
+    size_t const count = size / sizeof(Vertex);
+    
+    std::vector<Vertex> vertices (vertices_ptr, vertices_ptr + count);
 
-    mMappedRegion = bi::mapped_region(mSharedMemoryObject, bi::read_write);
-
-    int a ;
-    std::cin >> a;
-
-    Vertex * data = (Vertex*)mMappedRegion.get_address();
-    for(int i =0; i < 114112; ++i)
+    for(int i = 0; i < count; ++i)
     {
-        std::cout << (data+i)->pos.x << std::endl;
-        (data+i)->pos.x = 0;
-        std::cout << (data+i)->pos.x << std::endl;
+        Vertex * current = &vertices_ptr[i];
+        PrintVertexPos(current);
+        PrintVertexTexturePos(current);
+
+        current->texCoord.x = 0;
+        current->texCoord.y = 0;
     }
 
-    boost::interprocess::shared_memory_object refreshObject;
-    boost::interprocess::mapped_region refreshRegion;
-
-    refreshObject = bi::shared_memory_object(bi::open_only
-                                            ,"RefreshBuffer"
-                                            ,bi::read_write
-                                            );
-
-    refreshRegion = bi::mapped_region(refreshObject, bi::read_write);
-
-    Refresh * refreshInfo = (Refresh*)refreshRegion.get_address();
-
-    refreshInfo->refreshVertex = 1;
+    link.mMarkVertexForUpdate();
 }

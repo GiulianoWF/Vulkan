@@ -1,4 +1,5 @@
 add_executable(vertexProcessing main.cc)
+target_include_directories(vertexProcessing PRIVATE AFTER include)
 
 # find_package(OpenSSL)
 find_package(GLEW)

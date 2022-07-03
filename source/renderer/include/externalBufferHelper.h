@@ -86,15 +86,15 @@ void createAllocatedBuffer(VkPhysicalDevice physicalDevice,
         VK_EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT
     };
 
-    VkMemoryHostPointerPropertiesEXT pointersProps {
-        .sType = VK_STRUCTURE_TYPE_MEMORY_HOST_POINTER_PROPERTIES_EXT,
-        .pNext = nullptr,
-    };
+    // VkMemoryHostPointerPropertiesEXT pointersProps {
+    //     .sType = VK_STRUCTURE_TYPE_MEMORY_HOST_POINTER_PROPERTIES_EXT,
+    //     .pNext = nullptr,
+    // };
 
-    vkGetMemoryHostPointerPropertiesEXT(device, 
-                                        externalMemoryFlagBits,
-                                        data,
-                                        &pointersProps);
+    // vkGetMemoryHostPointerPropertiesEXT(device, 
+    //                                     externalMemoryFlagBits,
+    //                                     data,
+    //                                     &pointersProps);
 
     VkExternalMemoryBufferCreateInfo externalMemCreateInfo {
         .sType = VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_BUFFER_CREATE_INFO,
