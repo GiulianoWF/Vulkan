@@ -26,7 +26,7 @@ class ImageProcesser
             mSwapChainProcesser = swapChainProcesser;
     }
 
-    void createImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory) {
+    void createImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage & image, VkDeviceMemory& imageMemory) {
         VkImageCreateInfo imageInfo{};
         imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
         imageInfo.imageType = VK_IMAGE_TYPE_2D;
@@ -79,14 +79,6 @@ class ImageProcesser
         }
 
         return imageView;
-    }
-
-    void createImageViews() {
-        mSwapChainProcesser->mSwapChainImageViews.resize(mSwapChainProcesser->mSwapChainImages.size());
-
-        for (uint32_t i = 0; i < mSwapChainProcesser->mSwapChainImages.size(); i++) {
-            mSwapChainProcesser->mSwapChainImageViews[i] = createImageView(mSwapChainProcesser->mSwapChainImages[i], mSwapChainProcesser->mSwapChainImageFormat, VK_IMAGE_ASPECT_COLOR_BIT);
-        }
     }
 
     void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout) {

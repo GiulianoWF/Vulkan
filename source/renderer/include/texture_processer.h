@@ -27,9 +27,6 @@ class TextureProcesser
         TextureProcesser(   VkDevice * device,
                             VkPhysicalDevice * physicalDevice,
                             SwapChainProcesser * swapChainProcesser,
-                            // std::vector<VkImageView> * swapChainImageViews,
-                            // std::vector<VkImage> * swapChainImages,
-                            // VkFormat * swapChainImageFormat,
                             VkCommandPool * commandPool,
                             VkQueue * graphicsQueue)
         {
@@ -98,14 +95,6 @@ class TextureProcesser
             }
 
             vkBindBufferMemory(*mDevice, buffer, bufferMemory, 0);
-        }
-
-        void createImageViews() {
-            mSwapChainProcesser->mSwapChainImageViews.resize(mSwapChainProcesser->mSwapChainImages.size());
-
-            for (uint32_t i = 0; i < mSwapChainProcesser->mSwapChainImages.size(); i++) {
-                mSwapChainProcesser->mSwapChainImageViews[i] = createImageView(mSwapChainProcesser->mSwapChainImages[i], mSwapChainProcesser->mSwapChainImageFormat, VK_IMAGE_ASPECT_COLOR_BIT);
-            }
         }
 
         void createTextureImage() {
@@ -225,25 +214,25 @@ class TextureProcesser
             }
         }
 
-        VkImageView createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags) {
-            VkImageViewCreateInfo viewInfo{};
-            viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-            viewInfo.image = image;
-            viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-            viewInfo.format = format;
-            viewInfo.subresourceRange.aspectMask = aspectFlags;
-            viewInfo.subresourceRange.baseMipLevel = 0;
-            viewInfo.subresourceRange.levelCount = 1;
-            viewInfo.subresourceRange.baseArrayLayer = 0;
-            viewInfo.subresourceRange.layerCount = 1;
+        // VkImageView createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags) {
+        //     VkImageViewCreateInfo viewInfo{};
+        //     viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+        //     viewInfo.image = image;
+        //     viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+        //     viewInfo.format = format;
+        //     viewInfo.subresourceRange.aspectMask = aspectFlags;
+        //     viewInfo.subresourceRange.baseMipLevel = 0;
+        //     viewInfo.subresourceRange.levelCount = 1;
+        //     viewInfo.subresourceRange.baseArrayLayer = 0;
+        //     viewInfo.subresourceRange.layerCount = 1;
 
-            VkImageView imageView;
-            if (vkCreateImageView(*mDevice, &viewInfo, nullptr, &imageView) != VK_SUCCESS) {
-                throw std::runtime_error("failed to create texture image view!");
-            }
+        //     VkImageView imageView;
+        //     if (vkCreateImageView(*mDevice, &viewInfo, nullptr, &imageView) != VK_SUCCESS) {
+        //         throw std::runtime_error("failed to create texture image view!");
+        //     }
 
-            return imageView;
-        }
+        //     return imageView;
+        // }
 
         void createImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory) {
             VkImageCreateInfo imageInfo{};
