@@ -663,15 +663,39 @@ private:
         return format == VK_FORMAT_D32_SFLOAT_S8_UINT || format == VK_FORMAT_D24_UNORM_S8_UINT;
     }
 
-    void createVertexBuffer() {
+    void createVertexBuffer()
+    {
         VkDeviceSize dataSize = mGetModelVertexDataSize();
 
         //====================================================================
         //                     Staging vertex buffer
         //====================================================================
-        createBuffer(dataSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, this->stagingVertexBuffer, this->stagingVertexBufferMemory);
+        // #define IMPORT_MEM
+        #ifdef IMPORT_MEM
+
+        createAllocatedBuffer(physicalDevice, 
+                              device,
+                              mStagingVertexDataHandler_ptr,
+                              this->stagingVertexBuffer,
+                              this->stagingVertexBufferMemory,
+                            //   GetMinImportedHostPointerAlignment(physicalDevice));
+                              dataSize);
+
+        // The ideia is this mapping not be needed, and mStagingVertexDataHandler_ptr point to shared memory.
+        vkMapMemory(device, this->stagingVertexBufferMemory, 0, dataSize, 0, &mStagingVertexDataHandler_ptr);
+
+        #else
+
+        createBuffer(dataSize, 
+                     VK_BUFFER_USAGE_TRANSFER_SRC_BIT, 
+                     VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, 
+                     this->stagingVertexBuffer, 
+                     this->stagingVertexBufferMemory);
 
         vkMapMemory(device, this->stagingVertexBufferMemory, 0, dataSize, 0, &mStagingVertexDataHandler_ptr);
+
+        #endif
+
         mCopyModelVertexDataTo(mStagingVertexDataHandler_ptr);
 
         //====================================================================

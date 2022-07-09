@@ -55,46 +55,41 @@ uint32_t findMemoryType(VkPhysicalDevice physicalDevice, uint32_t typeFilter, Vk
 
 void createAllocatedBuffer(VkPhysicalDevice physicalDevice, 
                            VkDevice const& device,
-                           void* data,
+                           void* & data,
                            VkBuffer & buffer,
-                           VkDeviceMemory& bufferMemory,
+                           VkDeviceMemory & bufferMemory,
                            VkDeviceSize size)
 {
-    // uint32_t extNum;
-    // vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extNum, nullptr);
-    // VkExtensionProperties deviceProps[extNum];
-    // vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extNum, deviceProps);
-
-    // std::cout << "Extensions " << extNum << std::endl;
-    // for (int i =0 ; i < extNum ; ++i)
-    // {
-    //     // std::cout << deviceProps[i].extensionName << std::endl;
-    // }
-
-    // uint32_t extNum;
-    // vkEnumerateInstanceExtensionProperties(nullptr, &extNum, nullptr);
-    // VkExtensionProperties instanceProps[extNum];
-    // vkEnumerateInstanceExtensionProperties(nullptr, &extNum, instanceProps);
-
-    // std::cout << "Extensions " << extNum << std::endl;
-    // for (int i =0 ; i < extNum ; ++i)
-    // {
-    //     std::cout << instanceProps[i].extensionName << std::endl;
-    // }
-
-    VkExternalMemoryHandleTypeFlagBits externalMemoryFlagBits {
-        VK_EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT
+    VkPhysicalDeviceExternalMemoryHostPropertiesEXT externalMemHostProp {
+        .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_MEMORY_HOST_PROPERTIES_EXT,
+        .pNext = nullptr,
     };
 
-    // VkMemoryHostPointerPropertiesEXT pointersProps {
-    //     .sType = VK_STRUCTURE_TYPE_MEMORY_HOST_POINTER_PROPERTIES_EXT,
-    //     .pNext = nullptr,
-    // };
+    VkPhysicalDeviceProperties physicalDeviceProps;
 
-    // vkGetMemoryHostPointerPropertiesEXT(device, 
-    //                                     externalMemoryFlagBits,
-    //                                     data,
-    //                                     &pointersProps);
+    VkPhysicalDeviceProperties2 physicalDeviceProps2 {
+        .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2,
+        .pNext = &externalMemHostProp,
+        .properties = physicalDeviceProps,
+    };
+
+    vkGetPhysicalDeviceProperties2(physicalDevice, &physicalDeviceProps2);
+
+    data = malloc(externalMemHostProp.minImportedHostPointerAlignment);
+
+    VkExternalMemoryHandleTypeFlagBits externalMemoryFlagBits {
+        VK_EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT 
+    };
+
+    VkMemoryHostPointerPropertiesEXT pointersProps {
+        .sType = VK_STRUCTURE_TYPE_MEMORY_HOST_POINTER_PROPERTIES_EXT,
+        .pNext = nullptr,
+    };
+
+    vkGetMemoryHostPointerPropertiesEXT(device, 
+                                        externalMemoryFlagBits,
+                                        data,
+                                        &pointersProps);
 
     VkExternalMemoryBufferCreateInfo externalMemCreateInfo {
         .sType = VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_BUFFER_CREATE_INFO,
@@ -110,7 +105,7 @@ void createAllocatedBuffer(VkPhysicalDevice physicalDevice,
         .sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
         .pNext = &externalMemCreateInfo,
         .flags = 0,
-        .size = size,
+        .size = externalMemHostProp.minImportedHostPointerAlignment,
         .usage = bufferUsage,
         .sharingMode = VK_SHARING_MODE_EXCLUSIVE,
     };
@@ -127,13 +122,15 @@ void createAllocatedBuffer(VkPhysicalDevice physicalDevice,
     if (auto result = vkGetMemoryHostPointerPropertiesEXT(device, externalMemoryFlagBits, data, &memoryHostPointerProperties); 
         result != VK_SUCCESS) 
     {
-        printError(result);
+        // printError(result);
     }
-    std::cout << "VkMemoryHostPointerPropertiesEXT::memoryTypeBits " << memoryHostPointerProperties.memoryTypeBits << std::endl;
 
     VkMemoryPropertyFlags memProperties {
         VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT
     };
+
+    auto resultMemType = memoryHostPointerProperties.memoryTypeBits & memProperties;
+    auto canBeImported = resultMemType == memProperties;
 
     VkImportMemoryHostPointerInfoEXT importHostPointerInfo {
         .sType = VK_STRUCTURE_TYPE_IMPORT_MEMORY_HOST_POINTER_INFO_EXT,
@@ -149,69 +146,16 @@ void createAllocatedBuffer(VkPhysicalDevice physicalDevice,
     VkMemoryAllocateInfo allocInfo {
         .sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
         .pNext = &importHostPointerInfo,
-        .allocationSize = size,
+        .allocationSize = externalMemHostProp.minImportedHostPointerAlignment,
         .memoryTypeIndex = memTypeIndex,
     };
 
-    VkDeviceMemory * pMemory;
-    if (auto result = vkAllocateMemory(device, &allocInfo, nullptr, pMemory); 
+    if (auto result = vkAllocateMemory(device, &allocInfo, nullptr, &bufferMemory); 
         result != VK_SUCCESS) 
     {
-        printError(result);
+        // printError(result);
         throw std::runtime_error("failed to allocate buffer memory!");
     }
 
     vkBindBufferMemory(device, buffer, bufferMemory, 0);
 }
-
-    // VkPhysicalDeviceMemoryProperties physicalDeviceMemoryProps;
-    // vkGetPhysicalDeviceMemoryProperties(physicalDevice, &physicalDeviceMemoryProps);
-    // for(auto& memoryType : physicalDeviceMemoryProps.memoryTypes)
-    // {
-    //     // Is == 15;
-    //     if(memoryType.propertyFlags == (VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT | VK_MEMORY_PROPERTY_HOST_CACHED_BIT))
-    //     {
-    //         std::cout << "found" << std::endl;
-    //     }
-    // }
-    // std::cout << "Type " << (int16_t)physicalDeviceMemoryProps.memoryTypes[0].propertyFlags << std::endl;
-
-// VkBufferCreateFlags createBufferFlags;
-// VkBufferUsageFlagBits bufferUsage;
-
-// // Get VkBufferCreateInfo compatible handle types. VUID-VkBufferCreateInfo-pNext-00920
-// VkPhysicalDeviceExternalBufferInfo physicalDeviceExternalBufferInfo;
-// physicalDeviceExternalBufferInfo.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_BUFFER_INFO;
-// physicalDeviceExternalBufferInfo.pNext = nullptr;
-// physicalDeviceExternalBufferInfo.flags = createBufferFlags;
-// physicalDeviceExternalBufferInfo.usage = bufferUsage;
-// physicalDeviceExternalBufferInfo.handleType = externalMemoryFlagBits;
-
-// VkExternalBufferProperties externalBufferProperties; // Getting VkExternalBufferProperties::externalMemoryProperties.compatibleHandleTypes to put on VkExternalMemoryBufferCreateInfo::handleTypes
-// vkGetPhysicalDeviceExternalBufferProperties(physicalDevice, &physicalDeviceExternalBufferInfo, &externalBufferProperties);
-
-// void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory) {
-//     VkBufferCreateInfo bufferInfo{};
-//     bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-//     bufferInfo.size = size;
-//     bufferInfo.usage = usage;
-//     bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-
-//     if (vkCreateBuffer(device, &bufferInfo, nullptr, &buffer) != VK_SUCCESS) {
-//         throw std::runtime_error("failed to create buffer!");
-//     }
-
-//     VkMemoryRequirements memRequirements;
-//     vkGetBufferMemoryRequirements(device, buffer, &memRequirements);
-
-//     VkMemoryAllocateInfo allocInfo{};
-//     allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-//     allocInfo.allocationSize = memRequirements.size;
-//     allocInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, properties);
-
-//     if (vkAllocateMemory(device, &allocInfo, nullptr, &bufferMemory) != VK_SUCCESS) {
-//         throw std::runtime_error("failed to allocate buffer memory!");
-//     }
-
-//     vkBindBufferMemory(device, buffer, bufferMemory, 0);
-// }
