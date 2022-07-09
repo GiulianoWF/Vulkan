@@ -5,21 +5,14 @@
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>
-struct VertexComposition {
-    glm::vec3 pos;
-    glm::vec3 color;
-    glm::vec2 texCoord;
 
-    bool operator==(const VertexComposition& other) const;
-};
+#include "vertex_definition.h"
 
-bool VertexComposition::operator==(const VertexComposition& other) const {
-    return pos == other.pos && color == other.color && texCoord == other.texCoord;
-}
+#include <iostream>
 
 namespace std {
-    template<> struct hash<VertexComposition> {
-        size_t operator()(VertexComposition const& vertex) const {
+    template<> struct hash<Vertex> {
+        size_t operator()(Vertex const& vertex) const {
             return ((hash<glm::vec3>()(vertex.pos) ^ (hash<glm::vec3>()(vertex.color) << 1)) >> 1) ^ (hash<glm::vec2>()(vertex.texCoord) << 1);
         }
     };
@@ -27,48 +20,121 @@ namespace std {
 
 class TinyObjLoaderSupport
 {
-    std::vector<VertexComposition> mVertices;
+    std::vector<Vertex> mVertices;
     std::vector<uint32_t> mIndices;
 
     protected:
         void mLoadModel(std::string const& modelPath)
         {
-            tinyobj::attrib_t attrib;
-            std::vector<tinyobj::shape_t> shapes;
-            std::vector<tinyobj::material_t> materials;
-            std::string warn, err;
+            Vertex vertex0{
+                .pos{0.2f, -0.2f, -0.2f},
+                .color{0.0f, 0.0f, 1.0f},
+                .texCoord{0.375f, -0.167599}
+            };
+            Vertex vertex1{
+                .pos{0.2f, 0.2f, -0.2f},
+                .color{0.0f, 1.0f, 0.0f},
+                .texCoord{0.625f, 0.232401}
+            };
+            Vertex vertex2{
+                .pos{0.2, 0.2f, 0.2f},
+                .color{1.0f, 0.0f, 0.0f},
+                .texCoord{0.625f, 0.232401}
+            };
+            Vertex vertex3{
+                .pos{0.2f, -0.2f, 0.2f},
+                .color{0.4f, 0.4f, 0.4f},
+                .texCoord{0.625f, 0.232401}
+            };
 
-            if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &err, modelPath.c_str())) {
-                throw std::runtime_error(err);
-            }
+            Vertex vertex4{
+                .pos{-0.2f, -0.2f, -0.2f},
+                .color{0.0f, 0.0f, 1.0f},
+                .texCoord{0.375f, -0.167599}
+            };
+            Vertex vertex5{
+                .pos{-0.2f, 0.2f, -0.2f},
+                .color{0.0f, 1.0f, 0.0f},
+                .texCoord{0.375f, -0.167599}
+            };
+            Vertex vertex6{
+                .pos{-0.2, 0.2f, 0.2f},
+                .color{1.0f, 0.0f, 0.0f},
+                .texCoord{0.625f, 0.848625}
+            };
+            Vertex vertex7{
+                .pos{-0.2f, -0.2f, 0.2f},
+                .color{0.4f, 0.4f, 0.4f},
+                .texCoord{0.625f, 0.848625}
+            };
+            Vertex vertex8{
+                .pos{-0.2, 0.2f, 0.2f},
+                .color{0.1f, 0.848625f, 0.165054f},
+                .texCoord{0.625f, 0.848625}
+            };
+            mVertices.push_back(vertex0);
+            mVertices.push_back(vertex1);
+            mVertices.push_back(vertex2);
+            mVertices.push_back(vertex3);
+            mVertices.push_back(vertex4);
+            mVertices.push_back(vertex5);
+            mVertices.push_back(vertex6);
+            mVertices.push_back(vertex7);
+            mVertices.push_back(vertex8);
 
-            std::unordered_map<VertexComposition, uint32_t> uniqueVertices{};
+        //=================================
+            mIndices.push_back(0);
+            mIndices.push_back(1);
+            mIndices.push_back(2);
 
-            for (const auto& shape : shapes) {
-                for (const auto& index : shape.mesh.indices) {
-                    VertexComposition vertex{};
+            mIndices.push_back(0);
+            mIndices.push_back(2);
+            mIndices.push_back(3);
 
-                    vertex.pos = {
-                        attrib.vertices[3 * index.vertex_index + 0],
-                        attrib.vertices[3 * index.vertex_index + 1],
-                        attrib.vertices[3 * index.vertex_index + 2]
-                    };
+        //=================================
+            mIndices.push_back(5);
+            mIndices.push_back(4);
+            mIndices.push_back(6);
 
-                    vertex.texCoord = {
-                        attrib.texcoords[2 * index.texcoord_index + 0],
-                        1.0f - attrib.texcoords[2 * index.texcoord_index + 1]
-                    };
+            mIndices.push_back(6);
+            mIndices.push_back(4);
+            mIndices.push_back(7);
 
-                    vertex.color = {1.0f, 1.0f, 1.0f};
+        //=================================
+            mIndices.push_back(0);
+            mIndices.push_back(1);
+            mIndices.push_back(5);
 
-                    if (uniqueVertices.count(vertex) == 0) {
-                        uniqueVertices[vertex] = static_cast<uint32_t>(mVertices.size());
-                        mVertices.push_back(vertex);
-                    }
+            mIndices.push_back(0);
+            mIndices.push_back(5);
+            mIndices.push_back(4);
 
-                    mIndices.push_back(uniqueVertices[vertex]);
-                }
-            }
+        //=================================
+            mIndices.push_back(3);
+            mIndices.push_back(2);
+            mIndices.push_back(6);
+
+            mIndices.push_back(3);
+            mIndices.push_back(6);
+            mIndices.push_back(7);
+
+        //=================================
+            mIndices.push_back(5);
+            mIndices.push_back(6);
+            mIndices.push_back(2);
+
+            mIndices.push_back(5);
+            mIndices.push_back(2);
+            mIndices.push_back(1);
+
+        //=================================
+            mIndices.push_back(7);
+            mIndices.push_back(4);
+            mIndices.push_back(3);
+
+            mIndices.push_back(0);
+            mIndices.push_back(3);
+            mIndices.push_back(4);
         }
 
         void mCopyModelVertexDataTo(void * stagingVertexData)
